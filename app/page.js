@@ -1,6 +1,5 @@
 'use client';
 import { useAuth0 } from '@auth0/auth0-react';
-import Image from 'next/image';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -8,7 +7,7 @@ export default function Home() {
 
    return (
       <div className={styles.page}>
-         <main className={styles.main}>
+         {/* <main className={styles.main}> */}
             {isAuthenticated ? (
                <div>
                   <p>Welcome, {user.username || user.nickname || user.name}</p>
@@ -22,7 +21,7 @@ export default function Home() {
             ) : (
                <button onClick={() => loginWithRedirect()}>Log In</button>
             )}
-         </main>
+         {/* </main>
          <footer className={styles.footer}>
             <a
                href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
@@ -63,7 +62,7 @@ export default function Home() {
                />
                Go to nextjs.org →
             </a>
-         </footer>
+         </footer> */}
       </div>
    );
 }
