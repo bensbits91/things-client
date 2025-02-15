@@ -3,10 +3,24 @@
 // can I use isAuthenticated from useThing instead?
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import useThing from '../hooks/useThing';
+import { Table } from '../components/table';
 
 const ThingsPage = () => {
    const { things } = useThing();
    const areThings = things && things.length > 0;
+
+   const generateRandomThings = (num) => {
+      const randomThings = [];
+      for (let i = 0; i < num; i++) {
+         randomThings.push({
+            _id: i,
+            name: `Thing ${i}`,
+            type: `Type ${i}`
+         });
+      }
+      return randomThings;
+   };
+   const aBunchaThings = [...things, ...generateRandomThings(97)];
 
    return (
       <div>
@@ -21,6 +35,7 @@ const ThingsPage = () => {
                      <button>Edit</button>
                   </div>
                ))}
+            {areThings && <Table data={aBunchaThings} />}
          </div>
       </div>
    );
