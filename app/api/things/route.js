@@ -6,8 +6,8 @@ import axios from 'axios';
 // forward the request to the server at port 3000
 
 export async function POST(request) {
-   const { thingName, userId } = await request.json();
-   console.log('bb ~ { thingName, userId }:', { thingName, userId });
+   const { name, userId } = await request.json();
+   console.log('bb ~ { name, userId }:', { name, userId });
    console.log(
       "bb ~ request.headers.get('Authorization'):",
       request.headers.get('Authorization')
@@ -19,7 +19,7 @@ export async function POST(request) {
          'http://localhost:3000/things',
          {
             userId,
-            name: thingName
+            name
          },
          {
             headers: {

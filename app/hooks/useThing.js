@@ -18,8 +18,8 @@ const useThing = () => {
       }
    }, [isAuthenticated, user]);
 
-   const addThing = async thingName => {
-      console.log('bb ~ thingName:', thingName);
+   const addThing = async name => {
+      console.log('bb ~ name:', name);
       if (!isAuthenticated || !userInfo) {
          console.error(
             'User is not authenticated or user info is not available'
@@ -33,7 +33,7 @@ const useThing = () => {
          const response = await axios.post(
             '/api/things',
             {
-               thingName,
+               name,
                userId: userInfo.sub
             },
             {
