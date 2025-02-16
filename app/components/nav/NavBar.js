@@ -11,6 +11,9 @@ const NavBar = () => {
                <NavLink href='/things'>Things</NavLink>
             </li>
             <li>
+               <NavLink href='/search'>Search</NavLink>
+            </li>
+            <li>
                <NavLink href='/new'>New</NavLink>
             </li>
          </ul>

@@ -1,33 +1,35 @@
 'use client';
-// todo: do I really want to protect this entire page?
-// can I use isAuthenticated from useThing instead?
-import { withAuthenticationRequired } from '@auth0/auth0-react';
-import useThing from '../hooks/useThing';
+import { withAuthenticationRequired } from '@auth0/auth0-react'; // todo: is it overkill to use this plus the useAuth hook in useThings?
+import useThings from '../hooks/useThings';
 import { Table } from '../components/table';
 
 const ThingsPage = () => {
-   const { things } = useThing();
+   const { things, isLoading, error } = useThings();
    const areThings = things && things.length > 0;
-
-   const generateRandomThings = (num) => {
-      const randomThings = [];
-      for (let i = 0; i < num; i++) {
-         randomThings.push({
-            _id: i,
-            name: `Thing ${i}`,
-            type: `Type ${i}`
-         });
-      }
-      return randomThings;
-   };
-   const aBunchaThings = [...things, ...generateRandomThings(97)];
+   // const generateRandomThings = num => {
+   //    const randomThings = [];
+   //    for (let i = 0; i < num; i++) {
+   //       randomThings.push({
+   //          _id: i,
+   //          name: `Thing ${i}`,
+   //          type: `Type ${i}`
+   //       });
+   //    }
+   //    return randomThings;
+   // };
+   // const aBunchaThings = [...things, ...generateRandomThings(97)];
 
    return (
       <div>
          <h1>My Things</h1>
          <div>
             <p>Things will go here</p>
-            {areThings && JSON.stringify(things)}
+            {isLoading && <p>Loading...</p>}
+            {error && <p>{error}</p>}
+            {areThings && <Table data={things} />}
+            {areThings && (
+               <div style={{ margin: 40 }}>{JSON.stringify(things)}</div>
+            )}
             {areThings &&
                things.map((thing, index) => (
                   <div key={index}>
@@ -35,7 +37,6 @@ const ThingsPage = () => {
                      <button>Edit</button>
                   </div>
                ))}
-            {areThings && <Table data={aBunchaThings} />}
          </div>
       </div>
    );
