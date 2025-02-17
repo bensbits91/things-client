@@ -28,7 +28,8 @@ export default function RootLayout({ children }) {
                <NavBar />
                <main className={styles.main}>{children}</main>
                <footer className={styles.footer}>
-                  <a
+                  footer
+                  {/* <a
                      href='https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app'
                      target='_blank'
                      rel='noopener noreferrer'>
@@ -66,7 +67,7 @@ export default function RootLayout({ children }) {
                         height={16}
                      />
                      Go to nextjs.org →
-                  </a>
+                  </a> */}
                </footer>
             </Auth0ProviderWithHistory>
          </body>

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 
 // ✅ Table Component
 // const CustomTable = ({ columns, fetchData }) => {
-const CustomTable = ({ data }) => {
+const CustomTable = ({ data, columns, actions = null }) => {
    console.log('bb ~ Table.js ~ data:', data);
    //    const [data, setData] = useState([]);
    const [sorting, setSorting] = useState({ key: null, order: 'asc' });
@@ -23,11 +23,6 @@ const CustomTable = ({ data }) => {
    //    useEffect(() => {
    //       loadMoreRows();
    //    }, []);
-
-   const columns = [
-      { key: 'name', label: 'Name' },
-    //   { key: 'type', label: 'Type' }
-   ];
 
    // 📌 Handle sorting
    const handleSort = key => {
@@ -110,7 +105,9 @@ const CustomTable = ({ data }) => {
                            : ''}
                      </th>
                   ))}
-                  <th>e</th>
+                  {/* <th>e</th> */}
+                  {actions &&
+                     actions.map((action, index) => <th key={index}>{action.label}</th>)}
                </tr>
             </thead>
             <tbody>
@@ -126,9 +123,21 @@ const CustomTable = ({ data }) => {
                      {columns.map(col => (
                         <td key={col.key}>{row[col.key]}</td>
                      ))}
-                     <td>
+                     {/* <td>
                         <button>Edit</button>
-                     </td>
+                     </td> */}
+                     {actions &&
+                        actions.map((action, actionIndex) => (
+                           <td key={actionIndex}>
+                              <button
+                                 onClick={e => {
+                                    console.log('bb ~ Table.js ~ row:', row);
+                                    action.onClick(row.data.id); // todo: should we add id to normalized data?
+                                 }}>
+                                 {action.label}
+                              </button>
+                           </td>
+                        ))}
                   </tr>
                ))}
             </tbody>
@@ -146,8 +155,7 @@ const CustomTable = ({ data }) => {
 
          {selectedRows.size > 0 && (
             <div style={{ marginTop: 10 }}>
-               <strong>Selected Rows:</strong>{' '}
-               {Array.from(selectedRows).join(', ')}
+               <strong>Selected Rows:</strong> {Array.from(selectedRows).join(', ')}
             </div>
          )}
       </div>
