@@ -19,6 +19,11 @@ const ThingsPage = () => {
    // };
    // const aBunchaThings = [...things, ...generateRandomThings(97)];
 
+   const columns = [
+      { key: 'name', label: 'Name' }
+      //   { key: 'type', label: 'Type' }
+   ];
+
    return (
       <div>
          <h1>My Things</h1>
@@ -26,10 +31,8 @@ const ThingsPage = () => {
             <p>Things will go here</p>
             {isLoading && <p>Loading...</p>}
             {error && <p>{error}</p>}
-            {areThings && <Table data={things} />}
-            {areThings && (
-               <div style={{ margin: 40 }}>{JSON.stringify(things)}</div>
-            )}
+            {areThings && <Table data={things} columns={columns} />}
+            {areThings && <div style={{ margin: 40 }}>{JSON.stringify(things)}</div>}
             {areThings &&
                things.map((thing, index) => (
                   <div key={index}>

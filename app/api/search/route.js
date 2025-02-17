@@ -7,6 +7,7 @@ export async function GET(request) {
    const searchParams = new URL(request.url).searchParams;
    const searchTerm = searchParams.get('searchTerm');
    const userId = searchParams.get('userId');
+   // const types = searchParams.get('types');
    console.log('bb ~ { searchTerm, userId }:', { searchTerm, userId });
    console.log(
       "bb ~ request.headers.get('Authorization'):",
@@ -22,7 +23,8 @@ export async function GET(request) {
          },
          params: {
             userId,
-            searchTerm
+            query: searchTerm,
+            types: 'todo' // todo: get teypes from checkboxes -> request...
          }
       });
       console.log('bb ~ responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', response);
