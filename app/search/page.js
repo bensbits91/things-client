@@ -1,22 +1,26 @@
 'use client';
 import { useState } from 'react';
 import useSearch from '../hooks/useSearch';
-// import useSearchStore from '../store/useSearchStore';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { SearchTable } from '../components/search';
 
-const NewPage = () => {
-   const { sendSearch } = useSearch();
-   //   const { searchResults, setSearchResults } = useSearchStore(); // todo: use zustand
-   const [searchResults, setSearchResults] = useState({}); // currently storing results local to this page, will not persists on navigation
-   //    console.log('bb ~ page.js ~ searchResults:', searchResults);
-   const [searchTerm, setSearchTerm] = useState('');
-   const [isSearching, setIsSearching] = useState(false);
-   const [isDone, setIsDone] = useState(false);
-   const [errorData, setErrorData] = useState(null);
-
-   const [isModalOpen, setIsModalOpen] = useState(false);
-   const [modalData, setModalData] = useState(null);
+const SearchPage = () => {
+   const {
+      sendSearch,
+      searchResults,
+      setSearchResults,
+      searchTerm,
+      setSearchTerm,
+      isSearching,
+      setIsSearching,
+      isDone,
+      setIsDone,
+      errorData,
+      setErrorData,
+      isModalOpen,
+      setIsModalOpen,
+      modalData,
+      setModalData
+   } = useSearch();
 
    const handleSubmit = async event => {
       event.preventDefault();
@@ -33,15 +37,12 @@ const NewPage = () => {
       try {
          setIsSearching(true);
          // send request to nextjs route
-         //  const response = await axios.get(`/api/search?query=${searchTerm}`);
          const data = await sendSearch(searchTerm);
-         //  const response = { data: { fakeResults: { asdf: 'qwer' } } };
          console.log('bb ~ page.js ~ data:', data);
 
          // store in local state for now, zustand later maybe, so it persists on navigation
          setSearchResults({ ...searchResults, [searchTerm]: data });
          setIsDone(true);
-         //  console.log('Server response:', response.data);
       } catch (error) {
          setErrorData(error);
          console.error('Error fetching search results:', error);
@@ -65,16 +66,8 @@ const NewPage = () => {
    };
 
    const handleViewDetailsClick = id => {
-      console.log('View details for:', id);
       const searchResultsData = searchResults[searchTerm];
-      console.log('bb ~ page.js ~ searchResults:', searchResults);
-      console.log('bb ~ page.js ~ searchResultsData:', searchResultsData);
-      // todo: where should we normalize this data?
-    //   const modalSearchResults =
-    //      searchResultsData.results || searchResultsData.tmdb.results || [];
-
       const currentModalData = searchResultsData.find(result => result.data.id === id); // todo: normalize id?
-
       handleModalOpen();
       setModalData(currentModalData);
    };
@@ -135,4 +128,4 @@ const NewPage = () => {
    );
 };
 
-export default withAuthenticationRequired(NewPage);
+export default SearchPage;

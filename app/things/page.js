@@ -1,5 +1,4 @@
 'use client';
-import { withAuthenticationRequired } from '@auth0/auth0-react'; // todo: is it overkill to use this plus the useAuth hook in useThings?
 import useThings from '../hooks/useThings';
 import { Table } from '../components/table';
 
@@ -45,4 +44,4 @@ const ThingsPage = () => {
    );
 };
 
-export default withAuthenticationRequired(ThingsPage);
+export default ThingsPage;
