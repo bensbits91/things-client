@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-// import axios from 'axios';
 import useSearch from '../hooks/useSearch';
 // import useSearchStore from '../store/useSearchStore';
 import { withAuthenticationRequired } from '@auth0/auth0-react';

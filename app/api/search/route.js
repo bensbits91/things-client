@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 export async function GET(request) {
    //    console.log('bb ~ route.js ~ request:', request);
@@ -16,7 +16,7 @@ export async function GET(request) {
 
    try {
       // send request to server
-      const response = await axios.get('http://localhost:3000/search', {
+      const response = await axiosInstance.get('http://localhost:3000/search', {
          headers: {
             'Content-Type': 'application/json',
             Authorization: request.headers.get('Authorization')

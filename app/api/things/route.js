@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 // This is the API route that will be called from the client
 // handles POST requests to /api/things
@@ -15,10 +15,10 @@ export async function POST(request) {
 
    // Forward the request to the server at port 3000
    try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
          'http://localhost:3000/things',
          {
-            userId,
+            userId, // todo: the server should be able to get the userId from the user object
             name
          },
          {
@@ -48,12 +48,12 @@ export async function GET(request) {
 
    // Forward the request to the server at port 3000
    try {
-      const response = await axios.get('http://localhost:3000/things', {
+      const response = await axiosInstance.get('http://localhost:3000/things', {
          headers: {
             Authorization: request.headers.get('Authorization') // Forward the Authorization header
          },
          params: {
-            userId
+            userId // todo: the server should be able to get the userId from the user object
          }
       });
       console.log('bb ~ responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', response);
