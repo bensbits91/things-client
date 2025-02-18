@@ -1,6 +1,6 @@
 // 'use client';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import useAuth from './useAuth';
 
 const useThings = () => {
@@ -24,7 +24,7 @@ const useThings = () => {
             const token = await getAccessTokenSilently();
             console.log('bb ~ token:', token);
 
-            const response = await axios.get('/api/things', {
+            const response = await axiosInstance.get('/api/things', {
                headers: {
                   Authorization: `Bearer ${token}`
                },

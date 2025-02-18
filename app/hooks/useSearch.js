@@ -1,10 +1,12 @@
 // 'use client';
 import { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 
 // todo: do I like this pattern? What are the benefits?
 // Seems like I import everything from useSearch instead of just the functions I need
+
+// TODO: NOW: WHY TF AM I IMPORTING useAuth0 FROM @auth0/auth0-react INSTEAD OF FROM MY OWN useAuth.js FILE?
 
 const useSearch = () => {
    const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
@@ -23,7 +25,7 @@ const useSearch = () => {
             console.log('bb ~ useSearch.js ~ userInfo:', userInfo);
             const token = await getAccessTokenSilently();
             console.log('bb ~ token:', token);
-            const response = await axios.get('/api/search', {
+            const response = await axiosInstance.get('/api/search', {
                headers: {
                   Authorization: `Bearer ${token}`
                },

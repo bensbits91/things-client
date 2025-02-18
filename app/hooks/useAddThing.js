@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import useAuth from './useAuth';
 
 const useAddThing = () => {
@@ -22,7 +22,7 @@ const useAddThing = () => {
 
          const token = await getAccessTokenSilently();
          console.log('bb ~ token:', token);
-         const response = await axios.post(
+         const response = await axiosInstance.post(
             '/api/things',
             {
                ...data,
