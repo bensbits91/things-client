@@ -1,7 +1,7 @@
 'use client';
 const { useState } = require('react');
 import useAddThing from '../hooks/useAddThing';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+// import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 const NewPage = () => {
    const { addThing, isAdding, error } = useAddThing();
@@ -54,4 +54,4 @@ const NewPage = () => {
    );
 };
 
-export default withAuthenticationRequired(NewPage);
+export default /* withAuthenticationRequired( */NewPage/* ) */;

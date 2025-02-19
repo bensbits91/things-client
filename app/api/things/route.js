@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import axiosInstance from '../../utils/axiosInstance';
+import { auth0 } from '@/lib/auth0';
 
 // This is the API route that will be called from the client
 // handles POST requests to /api/things
@@ -18,7 +19,7 @@ export async function POST(request) {
       const response = await axiosInstance.post(
          'http://localhost:3000/things',
          {
-            userId, // todo: the server should be able to get the userId from the user object
+            // userId, // todo: the server should be able to get the userId from the user object
             name
          },
          {
@@ -42,18 +43,14 @@ export async function POST(request) {
 
 // todo: can i have GET things and GET thing? or do I need a thing/route.js?
 export async function GET(request) {
-   console.log('bb ~ route.js ~ request:', request);
-   const userId = request.nextUrl.searchParams.get('userId');
-   console.log('bb ~ userId:', userId);
+   const session = await auth0.getSession();
+   const { accessToken } = session.tokenSet;
 
    // Forward the request to the server at port 3000
    try {
       const response = await axiosInstance.get('http://localhost:3000/things', {
          headers: {
-            Authorization: request.headers.get('Authorization') // Forward the Authorization header
-         },
-         params: {
-            userId // todo: the server should be able to get the userId from the user object
+            Authorization: `Bearer ${accessToken}` // Forward the Authorization header
          }
       });
       console.log('bb ~ responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', response);

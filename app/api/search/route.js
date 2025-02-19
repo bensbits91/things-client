@@ -1,28 +1,23 @@
 import { NextResponse } from 'next/server';
 import axiosInstance from '../../utils/axiosInstance';
+import { auth0 } from '@/lib/auth0';
 
 export async function GET(request) {
-   //    console.log('bb ~ route.js ~ request:', request);
-   //    const { searchTerm, userId } = request.query;
    const searchParams = new URL(request.url).searchParams;
    const searchTerm = searchParams.get('searchTerm');
-   const userId = searchParams.get('userId');
    // const types = searchParams.get('types');
-   console.log('bb ~ { searchTerm, userId }:', { searchTerm, userId });
-   console.log(
-      "bb ~ request.headers.get('Authorization'):",
-      request.headers.get('Authorization')
-   );
+
+   const session = await auth0.getSession();
+   const { accessToken } = session.tokenSet;
 
    try {
       // send request to server
       const response = await axiosInstance.get('http://localhost:3000/search', {
          headers: {
             'Content-Type': 'application/json',
-            Authorization: request.headers.get('Authorization')
+            Authorization: `Bearer ${accessToken}`
          },
          params: {
-            userId,
             query: searchTerm,
             types: 'todo' // todo: get teypes from checkboxes -> request...
          }
