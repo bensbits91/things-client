@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import useSearch from '../hooks/useSearch';
 import { SearchTable } from '../components/search';
 

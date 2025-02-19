@@ -13,7 +13,7 @@ export default async function Home() {
    }
 
    const {
-      user: { email, nickname, username, picture }
+      user: { email, nickname, username, picture } // todo: add username to app_metadata
    } = session;
 
    return (
