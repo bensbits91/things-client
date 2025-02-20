@@ -106,7 +106,6 @@ const CustomTable = ({ data, columns, actions = null }) => {
                            : ''}
                      </th>
                   ))}
-                  {/* <th>e</th> */}
                   {actions &&
                      actions.map((action, index) => <th key={index}>{action.label}</th>)}
                </tr>
@@ -124,16 +123,13 @@ const CustomTable = ({ data, columns, actions = null }) => {
                      {columns.map(col => (
                         <td key={col.key}>{row[col.key]}</td>
                      ))}
-                     {/* <td>
-                        <button>Edit</button>
-                     </td> */}
                      {actions &&
                         actions.map((action, actionIndex) => (
                            <td key={actionIndex}>
                               <button
                                  onClick={e => {
                                     console.log('bb ~ Table.js ~ row:', row);
-                                    action.onClick(row.data.id); // todo: should we add id to normalized data?
+                                    action.onClick(row/* .data.id */); // todo: should we add id to normalized data?
                                  }}>
                                  {action.label}
                               </button>

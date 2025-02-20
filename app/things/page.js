@@ -1,14 +1,12 @@
 import axiosInstance from '../utils/axiosInstance';
 import { auth0 } from '@/lib/auth0';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
-
 import { ThingsTable } from '../components/things';
 
 const getInitialData = async () => {
    try {
       const session = await auth0.getSession();
       const { accessToken } = session.tokenSet;
-
       // todo: Forward the request to the server at port 3000?? Why isn't that working???
       const response = await axiosInstance.get('http://localhost:3000/things', {
          headers: {
@@ -28,12 +26,10 @@ const getInitialData = async () => {
 
 const ThingsPage = async () => {
    const queryClient = new QueryClient();
-
    await queryClient.prefetchQuery({
       queryKey: ['things'],
       queryFn: getInitialData
    });
-
    const dehydratedState = dehydrate(queryClient);
 
    return (

@@ -17,11 +17,11 @@ export const SearchTable = ({ results, handleViewDetailsClick }) => {
    const actions = [
       {
          label: 'View Details',
-         onClick: id => handleViewDetailsClick(id)
+         onClick: row => handleViewDetailsClick(row.data.id)
       },
       {
          label: 'Add to List',
-         onClick: id => console.log('would add to list:', id)
+         onClick: row => console.log('would add to list:', row)
       }
    ];
 

@@ -22,12 +22,30 @@ const ThingsTable = () => {
       //   { key: 'type', label: 'Type' }
    ];
 
+   const actions = [
+      {
+         key: 'view',
+         label: 'View',
+         onClick: row => console.log('would show in modal:', row)
+      },
+      {
+         key: 'edit',
+         label: 'Edit',
+         onClick: (row) => console.log('Edit', row)
+      },
+      {
+         key: 'delete',
+         label: 'Delete',
+         onClick: (row) => console.log('Delete', row)
+      }
+   ];
+
    const { data: things } = useQuery({
       queryKey: ['things'],
       queryFn: getThings
    });
 
-   return <Table data={things} columns={columns} />;
+   return <Table data={things} columns={columns} actions={actions} />;
 };
 
 export default ThingsTable;
