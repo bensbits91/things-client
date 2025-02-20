@@ -1,12 +1,16 @@
 import { Table } from '../table';
 
-export const SearchTable = ({ data, handleViewDetailsClick }) => {
-   console.log('bb ~ SearchTable.js ~ data:', data);
+export const SearchTable = ({ results, handleViewDetailsClick }) => {
+   if (!results || results.length === 0) {
+      return <p>No results found.</p>;
+   }
+
+   console.log('bb ~ SearchTable.js ~ results:', results);
    // todo: where should we normalize this data?
-//    const { book, movie, tvshow, videogame } = data;
+   //    const { book, movie, tvshow, videogame } = data;
    const columns = [
       { key: 'name', label: 'Name' },
-    //   { key: 'title', label: 'Title' },
+      //   { key: 'title', label: 'Title' },
       { key: 'type', label: 'Type' }
    ];
 
@@ -21,7 +25,7 @@ export const SearchTable = ({ data, handleViewDetailsClick }) => {
       }
    ];
 
-   return <Table data={data} columns={columns} actions={actions} />;
+   return <Table data={results} columns={columns} actions={actions} />;
 };
 
 export default SearchTable;
