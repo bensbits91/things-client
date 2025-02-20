@@ -1,44 +1,49 @@
-'use client';
-import useThings from '../hooks/useThings';
-import { Table } from '../components/table';
+import axiosInstance from '../utils/axiosInstance';
+import { auth0 } from '@/lib/auth0';
+import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 
-const ThingsPage = () => {
-   const { things, isLoading, error } = useThings();
-   const areThings = things && things.length > 0;
-   // const generateRandomThings = num => {
-   //    const randomThings = [];
-   //    for (let i = 0; i < num; i++) {
-   //       randomThings.push({
-   //          _id: i,
-   //          name: `Thing ${i}`,
-   //          type: `Type ${i}`
-   //       });
-   //    }
-   //    return randomThings;
-   // };
-   // const aBunchaThings = [...things, ...generateRandomThings(97)];
+import { ThingsTable } from '../components/things';
 
-   const columns = [
-      { key: 'name', label: 'Name' }
-      //   { key: 'type', label: 'Type' }
-   ];
+const getInitialData = async () => {
+   try {
+      const session = await auth0.getSession();
+      const { accessToken } = session.tokenSet;
+
+      // todo: Forward the request to the server at port 3000?? Why isn't that working???
+      const response = await axiosInstance.get('http://localhost:3000/things', {
+         headers: {
+            Authorization: `Bearer ${accessToken}` // Forward the Authorization header
+         }
+      });
+
+      return response.data;
+   } catch (error) {
+      console.error(
+         'Failed to load things on page:',
+         error.response ? error.response.data : error.message
+      );
+      return null;
+   }
+};
+
+const ThingsPage = async () => {
+   const queryClient = new QueryClient();
+
+   await queryClient.prefetchQuery({
+      queryKey: ['things'],
+      queryFn: getInitialData
+   });
+
+   const dehydratedState = dehydrate(queryClient);
 
    return (
       <div>
          <h1>My Things</h1>
          <div>
             <p>Things will go here</p>
-            {isLoading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
-            {areThings && <Table data={things} columns={columns} />}
-            {areThings && <div style={{ margin: 40 }}>{JSON.stringify(things)}</div>}
-            {areThings &&
-               things.map((thing, index) => (
-                  <div key={index}>
-                     <h2>{thing.name}</h2>
-                     <button>Edit</button>
-                  </div>
-               ))}
+            <HydrationBoundary state={dehydratedState}>
+               <ThingsTable />
+            </HydrationBoundary>
          </div>
       </div>
    );
