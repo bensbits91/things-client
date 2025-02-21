@@ -1,9 +1,9 @@
+'use client';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 
 // ✅ Table Component
 // const CustomTable = ({ columns, fetchData }) => {
 const CustomTable = ({ data, columns, actions = null }) => {
-   console.log('bb ~ Table.js ~ data:', data);
    //    const [data, setData] = useState([]);
    const [sorting, setSorting] = useState({ key: null, order: 'asc' });
    const [filter, setFilter] = useState('');
@@ -49,7 +49,6 @@ const CustomTable = ({ data, columns, actions = null }) => {
 
    // 📌 Toggle row selection
    const toggleRowSelection = id => {
-      console.log('bb ~ Table.js ~ id:', id);
       setSelectedRows(prev => {
          const newSelected = new Set(prev);
          newSelected.has(id) ? newSelected.delete(id) : newSelected.add(id);
@@ -105,7 +104,6 @@ const CustomTable = ({ data, columns, actions = null }) => {
                            : ''}
                      </th>
                   ))}
-                  {/* <th>e</th> */}
                   {actions &&
                      actions.map((action, index) => <th key={index}>{action.label}</th>)}
                </tr>
@@ -123,19 +121,20 @@ const CustomTable = ({ data, columns, actions = null }) => {
                      {columns.map(col => (
                         <td key={col.key}>{row[col.key]}</td>
                      ))}
-                     {/* <td>
-                        <button>Edit</button>
-                     </td> */}
                      {actions &&
                         actions.map((action, actionIndex) => (
                            <td key={actionIndex}>
-                              <button
-                                 onClick={e => {
-                                    console.log('bb ~ Table.js ~ row:', row);
-                                    action.onClick(row.data.id); // todo: should we add id to normalized data?
-                                 }}>
-                                 {action.label}
-                              </button>
+                              {row.userHasThing && action.altText ? (
+                                 <>{action.altText}</>
+                              ) : (
+                                 <button
+                                    onClick={e => {
+                                       console.log('bb ~ Table.js ~ row:', row);
+                                       action.onClick(row);
+                                    }}>
+                                    {action.label}
+                                 </button>
+                              )}
                            </td>
                         ))}
                   </tr>

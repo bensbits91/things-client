@@ -7,8 +7,9 @@ export async function GET(request) {
    const searchTerm = searchParams.get('searchTerm');
    // const types = searchParams.get('types');
 
-   const session = await auth0.getSession();
-   const { accessToken } = session.tokenSet;
+   const {
+      tokenSet: { accessToken }
+   } = await auth0.getSession(); // todo: replace everywhere (or create getAccessTokenFromSession util)
 
    try {
       // send request to server
@@ -22,7 +23,6 @@ export async function GET(request) {
             types: 'todo' // todo: get teypes from checkboxes -> request...
          }
       });
-      console.log('bb ~ responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', response);
 
       return NextResponse.json(response.data);
    } catch (error) {

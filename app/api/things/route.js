@@ -7,37 +7,44 @@ import { auth0 } from '@/lib/auth0';
 // forward the request to the server at port 3000
 
 export async function POST(request) {
-   const { name, userId } = await request.json();
-   console.log('bb ~ { name, userId }:', { name, userId });
-   console.log(
-      "bb ~ request.headers.get('Authorization'):",
-      request.headers.get('Authorization')
-   );
+   const { name, detail_id } = await request.json();
+
+   const {
+      tokenSet: { accessToken }
+   } = await auth0.getSession();
 
    // Forward the request to the server at port 3000
    try {
       const response = await axiosInstance.post(
          'http://localhost:3000/things',
          {
-            // userId, // todo: the server should be able to get the userId from the user object
-            name
+            name,
+            detail_id
          },
          {
             headers: {
                'Content-Type': 'application/json',
-               Authorization: request.headers.get('Authorization') // Forward the Authorization header
+               Authorization: `Bearer ${accessToken}`
             }
          }
       );
-      console.log('bb ~ responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', response);
 
       return NextResponse.json(response.data); // todo: add status code 201 or 301 (resource created)
    } catch (error) {
-      console.error('Error forwarding POST request:', error);
-      return NextResponse.json(
-         { message: 'Error forwarding POST request', details: error },
-         { status: 500 }
-      );
+      console.log('bb ~ route.js ~ error:', error);
+      if (error.response && error.response.status === 409) {
+         console.error('Conflict error:', error.response.data);
+         return NextResponse.json(
+            { message: 'Conflict error', details: error.response.data },
+            { status: 409 }
+         );
+      } else {
+         console.error('Error forwarding POST request:', error);
+         return NextResponse.json(
+            { message: 'Error forwarding POST request', details: error.message },
+            { status: 500 }
+         );
+      }
    }
 }
 
@@ -53,7 +60,6 @@ export async function GET(request) {
             Authorization: `Bearer ${accessToken}` // Forward the Authorization header
          }
       });
-      console.log('bb ~ responseeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:', response);
 
       return NextResponse.json(response.data); // todo: verify status code 200 is defaulted to here
    } catch (error) {
