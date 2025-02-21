@@ -18,10 +18,6 @@ const getThings = async () => {
 };
 
 export const SearchTable = ({ results, handleViewDetailsClick, handleAddThingClick }) => {
-   if (!results || results.length === 0) {
-      return <p>No results found.</p>;
-   }
-
    const {
       data: things,
       isLoading,
@@ -49,21 +45,27 @@ export const SearchTable = ({ results, handleViewDetailsClick, handleAddThingCli
    const columns = [
       { key: 'name', label: 'Name' },
       //   { key: 'title', label: 'Title' },
-      { key: 'type', label: 'Type' },
+      { key: 'type', label: 'Type' }
       // { key: 'userHasThing', label: 'you have it already' }
    ];
 
    const actions = [
       {
+         key: 'view',
          label: 'View Details',
          onClick: row => handleViewDetailsClick(row.external_id)
       },
       {
+         key: 'add',
          label: 'Add to List',
          onClick: row => handleAddThingClick(row.external_id),
          altText: 'In list'
       }
    ];
+
+   if (!results || results.length === 0) {
+      return <p>Search for something to get started...</p>;
+   }
 
    return <Table data={reultsWithIndicator} columns={columns} actions={actions} />;
 };
