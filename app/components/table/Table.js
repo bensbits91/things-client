@@ -124,13 +124,17 @@ const CustomTable = ({ data, columns, actions = null }) => {
                      {actions &&
                         actions.map((action, actionIndex) => (
                            <td key={actionIndex}>
-                              <button
-                                 onClick={e => {
-                                    console.log('bb ~ Table.js ~ row:', row);
-                                    action.onClick(row);
-                                 }}>
-                                 {action.label}
-                              </button>
+                              {row.userHasThing && action.altText ? (
+                                 <>{action.altText}</>
+                              ) : (
+                                 <button
+                                    onClick={e => {
+                                       console.log('bb ~ Table.js ~ row:', row);
+                                       action.onClick(row);
+                                    }}>
+                                    {action.label}
+                                 </button>
+                              )}
                            </td>
                         ))}
                   </tr>

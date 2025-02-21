@@ -62,43 +62,56 @@ export default function SearchForm() {
          return response.data;
       } catch (error) {
          console.error('Error adding thing:', error);
-         return null;
+         throw error;
       }
    };
 
    const handleAddThingClick = async external_id => {
-      const cachedData = queryClient.getQueryData(['search', searchTerm]);
-      const searchResultsData = cachedData || [];
-      const detailToAdd = searchResultsData.find(
-         result => result.external_id === external_id
-      );
+      try {
+         const cachedData = queryClient.getQueryData(['search', searchTerm]);
+         const searchResultsData = cachedData || [];
+         const detailToAdd = searchResultsData.find(
+            result => result.external_id === external_id
+         );
 
-      if (!detailToAdd) {
-         console.info('Thing to add not found');
-         return;
-      }
+         if (!detailToAdd) {
+            console.info('Thing to add not found');
+            return;
+         }
 
-      // Check if detail already in db
-      let detailData = await checkDetailExistsInDb(detailToAdd.external_id);
+         // Check if detail already in db
+         let detailData = await checkDetailExistsInDb(detailToAdd.external_id);
 
-      // If not, add detail to db and get detail_id
-      if (!detailData) {
-         detailData = await addDetailToDatabase(detailToAdd);
-      }
-      const detailId = detailData._id || detailData.id;
+         // If not, add detail to db and get detail_id
+         if (!detailData) {
+            detailData = await addDetailToDatabase(detailToAdd);
+         }
+         const detailId = detailData._id || detailData.id;
 
-      if (!detailData || !detailId) {
-         console.error('Failed to get detail ID');
-         return;
-      }
+         if (!detailData || !detailId) {
+            console.error('Failed to get detail ID');
+            return;
+         }
 
-      // Add thing to db with detail_id
-      const addedThing = await addThingToDatabase(detailData, detailId);
-      if (addedThing) {
-         console.log('Thing added successfully:', addedThing);
-         alert('Thing added successfully :)');
-         // invalidate things query so new thing appears in user's things list
-         queryClient.invalidateQueries({ queryKey: ['things'] });
+         // Add thing to db with detail_id
+         const addedThing = await addThingToDatabase(detailData, detailId);
+         if (addedThing) {
+            console.log('Thing added successfully:', addedThing);
+            alert('Thing added successfully :)');
+            // invalidate things query so new thing appears in user's things list
+            queryClient.invalidateQueries({ queryKey: ['things'] });
+         }
+      } catch (error) {
+         console.error('Error adding thing:', error);
+         const {status} = error.response || error;
+         console.log('bb ~ SearchForm.js ~ status:', status);
+         if (status === 409) {
+            // setErrorMessage('Conflict error: The thing already exists.');
+            alert('Conflict error: You already have this thing :)');
+         } else {
+            // setErrorMessage('An error occurred while adding the thing.');
+            alert('Unknown error adding that thing :/');
+         }
       }
    };
 

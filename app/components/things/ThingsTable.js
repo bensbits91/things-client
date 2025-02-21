@@ -40,7 +40,7 @@ const ThingsTable = () => {
       }
    ];
 
-   const { data: things } = useQuery({
+   const { data: things } = useQuery({ // todo: should we set a staleTime and cacheTime?
       queryKey: ['things'],
       queryFn: getThings
    });
