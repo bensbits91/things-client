@@ -17,11 +17,7 @@ const useAddThing = () => {
 
       try {
          const { name, type } = data;
-         console.log('bb ~ useAddThing.js ~ name:', name);
-         console.log('bb ~ useAddThing.js ~ type:', type);
-
          const token = await getAccessTokenSilently();
-         console.log('bb ~ token:', token);
          const response = await axiosInstance.post(
             '/api/things',
             {
@@ -34,7 +30,6 @@ const useAddThing = () => {
                }
             }
          );
-         console.log('bb ~ response:', response);
 
          return response.data;
       } catch (error) {

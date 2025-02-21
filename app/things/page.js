@@ -7,7 +7,7 @@ const getInitialData = async () => {
    try {
       const session = await auth0.getSession();
       const { accessToken } = session.tokenSet;
-      // todo: Forward the request to the server at port 3000?? Why isn't that working???
+      // send request directly to the server (instead of the API route) -- faster, fewer HTTP requests, less overhead
       const response = await axiosInstance.get('http://localhost:3000/things', {
          headers: {
             Authorization: `Bearer ${accessToken}` // Forward the Authorization header
@@ -28,7 +28,9 @@ const ThingsPage = async () => {
    const queryClient = new QueryClient();
    await queryClient.prefetchQuery({
       queryKey: ['things'],
-      queryFn: getInitialData
+      queryFn: getInitialData,
+      staleTime: 1000 * 60 * 60 * 4, // 4 hours // todo: decide on good values
+      cacheTime: 1000 * 60 * 60 * 8 // 8 hours
    });
    const dehydratedState = dehydrate(queryClient);
 

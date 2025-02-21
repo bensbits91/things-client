@@ -1,13 +1,10 @@
 import { Table } from '../table';
 
-export const SearchTable = ({ results, handleViewDetailsClick }) => {
+export const SearchTable = ({ results, handleViewDetailsClick, handleAddThingClick }) => {
    if (!results || results.length === 0) {
       return <p>No results found.</p>;
    }
 
-   console.log('bb ~ SearchTable.js ~ results:', results);
-   // todo: where should we normalize this data?
-   //    const { book, movie, tvshow, videogame } = data;
    const columns = [
       { key: 'name', label: 'Name' },
       //   { key: 'title', label: 'Title' },
@@ -17,11 +14,11 @@ export const SearchTable = ({ results, handleViewDetailsClick }) => {
    const actions = [
       {
          label: 'View Details',
-         onClick: row => handleViewDetailsClick(row.data.id)
+         onClick: row => handleViewDetailsClick(row.external_id)
       },
       {
          label: 'Add to List',
-         onClick: row => console.log('would add to list:', row)
+         onClick: row => handleAddThingClick(row.external_id)
       }
    ];
 

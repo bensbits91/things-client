@@ -12,7 +12,6 @@ const useThings = () => {
 
          try {
             const response = await axiosInstance.get('/api/things');
-            console.log('bb ~ response:', response);
 
             setThings(response.data);
          } catch (error) {

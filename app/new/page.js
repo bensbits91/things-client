@@ -10,14 +10,12 @@ const NewPage = () => {
       type: ''
    };
    const [formData, setFormData] = useState({ ...initialData });
-   console.log('bb ~ page.js ~ formData:', formData);
 
    const handleSubmit = async event => {
       event.preventDefault();
 
       try {
          const data = await addThing({ ...formData });
-         console.log('bb ~ data:', data);
          setFormData({ ...initialData });
       } catch (error) {
          console.error('Error adding thing:', error);
@@ -28,7 +26,6 @@ const NewPage = () => {
 
    const handleChange = e => {
       const { name, value } = e.target;
-      console.log('bb ~ page.js ~ { name, value }:', { name, value });
       setFormData(
          prevData => ({
             ...prevData,

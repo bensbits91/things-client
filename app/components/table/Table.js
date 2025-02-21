@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 // ✅ Table Component
 // const CustomTable = ({ columns, fetchData }) => {
 const CustomTable = ({ data, columns, actions = null }) => {
-   console.log('bb ~ Table.js ~ data:', data);
    //    const [data, setData] = useState([]);
    const [sorting, setSorting] = useState({ key: null, order: 'asc' });
    const [filter, setFilter] = useState('');
@@ -50,7 +49,6 @@ const CustomTable = ({ data, columns, actions = null }) => {
 
    // 📌 Toggle row selection
    const toggleRowSelection = id => {
-      console.log('bb ~ Table.js ~ id:', id);
       setSelectedRows(prev => {
          const newSelected = new Set(prev);
          newSelected.has(id) ? newSelected.delete(id) : newSelected.add(id);
@@ -129,7 +127,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
                               <button
                                  onClick={e => {
                                     console.log('bb ~ Table.js ~ row:', row);
-                                    action.onClick(row/* .data.id */); // todo: should we add id to normalized data?
+                                    action.onClick(row);
                                  }}>
                                  {action.label}
                               </button>
