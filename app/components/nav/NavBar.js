@@ -2,8 +2,8 @@ import NavLink from './NavLink';
 
 const NavBar = () => {
    return (
-      <nav>
-         <ul>
+      <nav style={{ marginBottom: 24, padding: 12}}>
+         <ul style={{ display: 'flex', listStyle: 'none', justifyContent: 'space-between' }}>
             <li>
                <NavLink href='/'>Home</NavLink>
             </li>
@@ -12,9 +12,6 @@ const NavBar = () => {
             </li>
             <li>
                <NavLink href='/search'>Search</NavLink>
-            </li>
-            <li>
-               <NavLink href='/new'>New</NavLink>
             </li>
          </ul>
       </nav>
