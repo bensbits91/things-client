@@ -1,9 +1,15 @@
-'use client';
-import useModalStore from '../../store/modalStore';
+import useModalStore from '@/app/store/modalStore';
+import ModalMenu from './ModalMenu';
+import { Loading } from '@/app/components/loading';
 
-const Modal = ({ actions = [] }) => {
+const Modal = ({ actions = [], returnExternalId }) => {
    console.log('bb ~ Modal.js ~ actions:', actions);
    const { isOpen, modalData, closeModal } = useModalStore();
+   if (!modalData) return null;
+   console.log('bb ~ Modal.js:8 ~ Modal ~ modalData:', modalData);
+   const { external_id } = modalData;
+   if (!external_id) return null;
+   console.log('bb ~ Modal.js:11 ~ Modal ~ external_id:', external_id);
 
    if (!isOpen) return null;
 
@@ -23,7 +29,8 @@ const Modal = ({ actions = [] }) => {
          }}>
          <h1>Modal</h1>
          <button onClick={closeModal}>Close</button>
-         {modalData ? <div>{JSON.stringify(modalData)}</div> : <div>Loading...</div>}
+         <ModalMenu actions={actions} externalId={external_id} passItBack={returnExternalId} />
+         {modalData ? <div>{JSON.stringify(modalData)}</div> : <Loading />}
       </div>
    );
 };

@@ -1,12 +1,13 @@
 'use client';
-import { Table } from '../table';
 import { useThings } from '@/app/hooks/things';
+import { Table } from '@/app/components/table';
+import { Loading } from '@/app/components/loading';
 
 const ThingsTable = () => {
    const { data: things, isLoading, isError } = useThings();
 
    if (isLoading) {
-      return <p>Loading...</p>;
+      return <Loading />;
    }
 
    if (isError) {

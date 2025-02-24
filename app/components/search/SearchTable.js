@@ -9,6 +9,7 @@ import { useSearch } from '@/app/hooks/search';
 import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { Table } from '@/app/components/table';
 import { Toast } from '@/app/components/toast';
+import { Loading } from '@/app/components/loading';
 
 export const SearchTable = () => {
    const queryClient = useQueryClient();
@@ -115,16 +116,12 @@ export const SearchTable = () => {
       }
    }, [showAlert, error, setShowAlert]);
 
-   if (isLoadingResults) {
-      return <p>Loading...</p>;
+   if (isLoadingResults || isLoadingThings) {
+      return <Loading />;
    }
    if (isErrorResults) {
       // or should we let fallback ui load?
       return <p>Failed to load search results :(</p>;
-   }
-
-   if (isLoadingThings) {
-      return <p>Loading things...</p>;
    }
    if (isErrorThings) {
       console.log(
@@ -140,7 +137,7 @@ export const SearchTable = () => {
             thingsError?.message
          ].includes('Authorization token expired')
       ) {
-         router.push('/auth/login');
+         router.push('/auth/login'); // todo: Not working
       }
       return <p>Failed to load things :(</p>;
    }
@@ -153,7 +150,7 @@ export const SearchTable = () => {
       <QueryErrorResetBoundary>
          {({ reset }) => (
             <ErrorBoundary onReset={reset}>
-               <Suspense fallback={<p>Loading (todo)...</p>}>
+               <Suspense fallback={<Loading />}>
                   <Table data={reultsWithIndicator} columns={columns} actions={actions} />
                   {toastMessage && (
                      <Toast message={toastMessage} onClose={() => setToastMessage('')} />

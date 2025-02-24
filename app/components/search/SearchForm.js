@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import useSearchStore from '../../store/searchStore';
+import useSearchStore from '@/app/store/searchStore';
 
 export default function SearchForm() {
    const [query, setQuery] = useState('');
