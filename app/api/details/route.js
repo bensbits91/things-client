@@ -5,6 +5,7 @@ import { auth0 } from '@/lib/auth0';
 export async function GET(request) {
    const searchParams = new URL(request.url).searchParams;
    const externalId = searchParams.get('externalId');
+   console.log('\n\n\n\nbb ~ route.js:8 ~ GET ~ externalId:', externalId, '\n\n\n\n');
    // const types = searchParams.get('types');
 
    const session = await auth0.getSession();
@@ -61,9 +62,17 @@ export async function POST(request) {
       return NextResponse.json(response.data);
    } catch (error) {
       console.error('Error forwarding POST request:', error);
-      return NextResponse.json(
-         { message: 'Error forwarding POST request', details: error },
-         { status: 500 }
-      );
+      if (error.response && error.response.status === 409) {
+         console.log('Conflict error: Detail already exists in DB');
+         return NextResponse.json(
+            { message: 'Conflict error: Detail already exists in DB' },
+            { status: 409 }
+         );
+      } else {
+         return NextResponse.json(
+            { message: 'Error forwarding POST request', details: error },
+            { status: 500 }
+         );
+      }
    }
 }

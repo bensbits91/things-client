@@ -3,9 +3,9 @@ import useModalStore from '../../store/modalStore';
 
 const Modal = ({ actions = [] }) => {
    console.log('bb ~ Modal.js ~ actions:', actions);
-   const { isOpen, modalType, modalData, closeModal } = useModalStore();
+   const { isOpen, modalData, closeModal } = useModalStore();
 
-   if (!isOpen || !modalType) return null;
+   if (!isOpen) return null;
 
    return (
       <div

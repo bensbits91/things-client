@@ -1,8 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import { getSearch } from '@/app/services/search';
+import useSearchStore from '@/app/store/searchStore';
 
-export const useSearch = searchTerm => {
-   console.log('bb ~ search.js ~ searchTerm:', searchTerm);
+// search is different from things and details because
+// the server handles creating (caching) the search results
+// since we don't manually trigger adding a search term,
+// we don't need to invalidate the cache
+// todo: right ^^^ ???
+
+
+// might be wrong? searchTerm is stuck. Click add to list, and it sends the previous searchTerm...
+
+
+export const useSearch = () => {
+   const { searchTerm } = useSearchStore();
+
    const { data, isLoading, isError, refetch } = useQuery({
       queryKey: ['search', searchTerm],
       queryFn: () => getSearch(searchTerm),

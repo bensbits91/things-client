@@ -49,6 +49,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
 
    // 📌 Toggle row selection
    const toggleRowSelection = id => {
+      console.log('bb ~ Table.js:52 ~ CustomTable ~ id:', id);
       setSelectedRows(prev => {
          const newSelected = new Set(prev);
          newSelected.has(id) ? newSelected.delete(id) : newSelected.add(id);
@@ -61,7 +62,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
       if (selectedRows.size === filteredData.length) {
          setSelectedRows(new Set());
       } else {
-         setSelectedRows(new Set(filteredData.map(row => row._id)));
+         setSelectedRows(new Set(filteredData.map(row => row._id || row.external_id)));
       }
    };
 
@@ -114,8 +115,8 @@ const CustomTable = ({ data, columns, actions = null }) => {
                      <td>
                         <input
                            type='checkbox'
-                           checked={selectedRows.has(row._id)}
-                           onChange={() => toggleRowSelection(row._id)}
+                           checked={selectedRows.has(row._id || row.external_id)}
+                           onChange={() => toggleRowSelection(row._id || row.external_id)}
                         />
                      </td>
                      {columns.map(col => (

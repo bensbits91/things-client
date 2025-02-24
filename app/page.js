@@ -3,7 +3,6 @@ import styles from './page.module.css';
 
 export default async function Home() {
    const session = await auth0.getSession(); // todo: should this be moved up to layout.js?
-
    if (!session) {
       return (
          <div className={styles.page}>
