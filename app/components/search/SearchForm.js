@@ -1,13 +1,11 @@
 'use client';
 import { useState } from 'react';
-import useSearchStore from '@/app/store/searchStore';
+import { SearchTable } from './SearchTable';
 
 export default function SearchForm() {
    const [query, setQuery] = useState('');
-   const { setSearchTerm } = useSearchStore();
+   const [searchTerm, setSearchTerm] = useState('');
 
-   // our search form doesn't search, just sets the search term in the store
-   // the table handles searching and displaying the results
    const handleSubmit = e => {
       e.preventDefault();
       setSearchTerm(query);
@@ -35,6 +33,9 @@ export default function SearchForm() {
                Add without details
             </button>
          </form>
+         {!query && <div><p>Start typing to get started</p></div>}
+         {query && !searchTerm && <div><p>Click the button to get started</p></div>}
+         {searchTerm && <SearchTable searchTerm={searchTerm} />}
       </div>
    );
 }

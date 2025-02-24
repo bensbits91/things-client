@@ -1,37 +1,42 @@
-import useModalStore from '@/app/store/modalStore';
+import Image from 'next/image';
 import ModalMenu from './ModalMenu';
-import { Loading } from '@/app/components/loading';
+import styles from './Modal.module.css';
 
-const Modal = ({ actions = [], returnExternalId }) => {
-   console.log('bb ~ Modal.js ~ actions:', actions);
-   const { isOpen, modalData, closeModal } = useModalStore();
-   if (!modalData) return null;
-   console.log('bb ~ Modal.js:8 ~ Modal ~ modalData:', modalData);
-   const { external_id } = modalData;
-   if (!external_id) return null;
-   console.log('bb ~ Modal.js:11 ~ Modal ~ external_id:', external_id);
-
-   if (!isOpen) return null;
+const Modal = ({ modalData, actions = [], handleCloseModal }) => {
+   if (!modalData) return <></>;
+   const { userHasThing } = modalData;
 
    return (
-      <div
-         style={{
-            position: 'fixed',
-            top: 40,
-            left: 40,
-            right: 40,
-            bottom: 40,
-            padding: 40,
-            overflow: 'auto',
-            // display: isOpen ? 'block' : 'none', // todo: is this needed?
-            // if not, now can we animate the entrance?
-            backgroundColor: '#333'
-         }}>
-         <h1>Modal</h1>
-         <button onClick={closeModal}>Close</button>
-         <ModalMenu actions={actions} externalId={external_id} passItBack={returnExternalId} />
-         {modalData ? <div>{JSON.stringify(modalData)}</div> : <Loading />}
+      <div className={styles.modal}>
+         <div className={styles.header}>
+            <h1>{modalData.name}</h1>
+            <button onClick={handleCloseModal}>Close</button>
+         </div>
+         <div className={styles.content}>
+            <div className={styles.hero}>
+               {modalData.main_image_url && (
+                  <div className={styles.imageWrapper}>
+                     <Image
+                        src={modalData.main_image_url}
+                        alt={modalData.name}
+                        fill
+                        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                     />
+                  </div>
+               )}
+               <div>
+                  <ModalMenu actions={actions} userHasThing={userHasThing} />
+                  <div>{modalData.description}</div>
+                  <div>{modalData.type}</div>
+                  <div>Genres: {modalData.genres.join(', ')}</div>
+                  <div>{modalData.country}</div>
+                  <div>{modalData.language}</div>
+                  <div>{modalData.date}</div>
+               </div>
+            </div>
+         </div>
       </div>
    );
 };
+
 export default Modal;

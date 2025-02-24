@@ -1,30 +1,17 @@
-const ModalMenu = ({ actions = [], externalId, passItBack }) => {
-   console.log('bb ~ ModalMenu.js ~ actions:', actions);
-   console.log('bb ~ ModalMenu.js:13 ~ ModalMenu ~ externalId:', externalId);
+import styles from './Modal.module.css';
 
-   const handleClick = (action, externalId, passItBack) => {
-      console.log('bb ~ ModalMenu.js:16 ~ handleClick ~ action:', action);
-      console.log('bb ~ ModalMenu.js:16 ~ handleClick ~ externalId:', externalId);
-      if (action.key === 'returnExternalId') {
-         passItBack(externalId);
-      } else {
-         action.onClick();
-      }
-   };
-
-   return (
-      <div>
-         {actions.map(action => (
-            <button
-               key={action.key}
-               onClick={() => {
-                  handleClick(action);
-               }}>
+const ModalMenu = ({ actions = [], userHasThing }) => (
+   <div className={styles.modalMenu}>
+      {actions.map(action =>
+         userHasThing && action.altText ? (
+            <span key={action.key}>{action.altText}</span>
+         ) : (
+            <button key={action.key} onClick={action.onClick}>
                {action.label}
             </button>
-         ))}
-      </div>
-   );
-};
+         )
+      )}
+   </div>
+);
 
 export default ModalMenu;

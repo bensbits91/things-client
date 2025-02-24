@@ -1,8 +1,6 @@
 'use client';
 import { useMemo, useEffect, useState, Suspense } from 'react';
 import { useQueryClient, QueryErrorResetBoundary } from '@tanstack/react-query';
-import useSearchStore from '@/app/store/searchStore';
-import useModalStore from '@/app/store/modalStore';
 import { useErrorHandler } from '@/app/hooks/errors';
 import { useThings, useAddThingWithDetails } from '@/app/hooks/things';
 import { useSearch } from '@/app/hooks/search';
@@ -10,12 +8,12 @@ import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { Table } from '@/app/components/table';
 import { Toast } from '@/app/components/toast';
 import { Loading } from '@/app/components/loading';
+import { Modal } from '@/app/components/modal';
 
-export const SearchTable = () => {
+export const SearchTable = ({ searchTerm }) => {
    const queryClient = useQueryClient();
-   const { searchTerm } = useSearchStore();
-   const { openModal } = useModalStore();
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler();
+   const [modalData, setModalData] = useState(null);
    const [toastMessage, setToastMessage] = useState('');
 
    const {
@@ -31,7 +29,28 @@ export const SearchTable = () => {
       isError: isErrorResults,
       error: resultsError,
       refetch
-   } = useSearch();
+   } = useSearch(searchTerm);
+
+   const reultsWithUserInfo = useMemo(() => {
+      if (!results || !things) return [];
+      return results.map(result => {
+         const userThing = things.find(thing => {
+            const thingExternalId = thing.details[0]?.external_id;
+            if (!thingExternalId) return false;
+            const resultExternalId = result.external_id?.toString();
+            return thingExternalId === resultExternalId;
+         });
+
+         return {
+            ...result,
+            userHasThing: !!userThing,
+            rating: userThing?.rating || 0,
+            status: userThing?.status || 0,
+            notes: userThing?.notes || '',
+            review: userThing?.review || ''
+         };
+      });
+   }, [results, things]);
 
    // import handleError into the component, and pass it to the hook
    // so they share the same handler and don't conflict with each other (i think)
@@ -53,8 +72,10 @@ export const SearchTable = () => {
    };
 
    const handleViewDetailsClick = externalId => {
-      const currentModalData = results.find(result => result.external_id === externalId);
-      openModal(currentModalData);
+      const currentModalData = reultsWithUserInfo.find(
+         result => result.external_id === externalId
+      );
+      setModalData(currentModalData);
    };
 
    // check the cache, refetch if not found
@@ -72,30 +93,12 @@ export const SearchTable = () => {
       handleSearch();
    }, [searchTerm]);
 
-   const reultsWithIndicator = useMemo(() => {
-      if (!results || !things) return [];
-      return results.map(result => {
-         const userHasThing =
-            things &&
-            Array.isArray(things) &&
-            things.find(thing => {
-               const thingExternalId = thing.details[0]?.external_id;
-               if (!thingExternalId) return false;
-               const resultExternalId = result.external_id?.toString();
-               const hasit = thingExternalId === resultExternalId;
-               return hasit;
-            });
-
-         return { ...result, userHasThing: !!userHasThing };
-      });
-   }, [results, things]);
-
    const columns = [
       { key: 'name', label: 'Name' },
       { key: 'type', label: 'Type' }
    ];
 
-   const actions = [
+   const tableActions = [
       {
          key: 'view',
          label: 'View Details',
@@ -109,6 +112,31 @@ export const SearchTable = () => {
       }
    ];
 
+   const handleModalAddClick = () => {
+      const { external_id } = modalData;
+      if (external_id) {
+         handleAddThingClick(external_id);
+      }
+   };
+
+   const modalActions = [
+      {
+         key: 'hey',
+         label: 'Hey Ben',
+         onClick: () => console.log('hey ben')
+      },
+      {
+         key: 'add',
+         label: 'Add to List',
+         onClick: handleModalAddClick,
+         altText: 'In list'
+      }
+   ];
+
+   const handleCloseModal = () => {
+      setModalData(null);
+   };
+
    useEffect(() => {
       if (showAlert) {
          setToastMessage(error.message);
@@ -117,10 +145,11 @@ export const SearchTable = () => {
    }, [showAlert, error, setShowAlert]);
 
    if (isLoadingResults || isLoadingThings) {
+      // todo: do i need this if using Suspense??
       return <Loading />;
    }
    if (isErrorResults) {
-      // or should we let fallback ui load?
+      console.log('bb ~ SearchTable.js:153 ~ SearchTable ~ resultsError:', resultsError);
       return <p>Failed to load search results :(</p>;
    }
    if (isErrorThings) {
@@ -151,7 +180,18 @@ export const SearchTable = () => {
          {({ reset }) => (
             <ErrorBoundary onReset={reset}>
                <Suspense fallback={<Loading />}>
-                  <Table data={reultsWithIndicator} columns={columns} actions={actions} />
+                  <Table
+                     data={reultsWithUserInfo}
+                     columns={columns}
+                     actions={tableActions}
+                  />
+                  {modalData && (
+                     <Modal
+                        modalData={modalData}
+                        actions={modalActions}
+                        handleCloseModal={handleCloseModal}
+                     />
+                  )}
                   {toastMessage && (
                      <Toast message={toastMessage} onClose={() => setToastMessage('')} />
                   )}
