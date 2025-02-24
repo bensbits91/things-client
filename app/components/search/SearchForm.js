@@ -6,6 +6,8 @@ export default function SearchForm() {
    const [query, setQuery] = useState('');
    const { setSearchTerm } = useSearchStore();
 
+   // our search form doesn't search, just sets the search term in the store
+   // the table handles searching and displaying the results
    const handleSubmit = e => {
       e.preventDefault();
       setSearchTerm(query);
