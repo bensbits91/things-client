@@ -28,7 +28,7 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
                   <ModalMenu actions={actions} userHasThing={userHasThing} />
                   <div>{modalData.description}</div>
                   <div>{modalData.type}</div>
-                  <div>Genres: {modalData.genres.join(', ')}</div>
+                  <div>Genres: {modalData.genres?.join(', ')}</div>
                   <div>{modalData.country}</div>
                   <div>{modalData.language}</div>
                   <div>{modalData.date}</div>
