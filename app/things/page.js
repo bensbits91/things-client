@@ -20,6 +20,13 @@ const getInitialData = async () => {
          'Failed to load things on page:',
          error.response ? error.response.data : error.message
       );
+      // if (
+      //    error.message === 'Authorization token expired' ||
+      //    error.response.status === 401
+      // ) {
+      //    // Redirect to the login page if the token is expired or invalid
+      //    auth0.loginWithRedirect();
+      // }
       return null;
    }
 };
@@ -38,7 +45,6 @@ const ThingsPage = async () => {
       <div>
          <h1>My Things</h1>
          <div>
-            <p>Things will go here</p>
             <HydrationBoundary state={dehydratedState}>
                <ThingsTable />
             </HydrationBoundary>

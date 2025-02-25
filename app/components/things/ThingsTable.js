@@ -11,33 +11,12 @@ import { Toast } from '@/app/components/toast';
 
 const ThingsTable = () => {
    const { data: things, isLoading, isError } = useThings();
-   const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler();
+   const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler(); // todo
    const [modalData, setModalData] = useState(null);
-   const [toastMessage, setToastMessage] = useState('');
-
-   const normalizedModalData = data => {
-      const detailsToPullToTop = [
-         // data the modal needs to display
-         'main_image_url',
-         'type',
-         'description',
-         'genres',
-         'country',
-         'language',
-         'date'
-      ];
-      const currentModalData = { ...data }; // a copy of the clicked thing
-      const thingDetail = currentModalData.details[0]; // the deatils of the clicked thing
-
-      detailsToPullToTop.forEach(detail => {
-         currentModalData[detail] = thingDetail[detail];
-      });
-      return currentModalData;
-   };
+   const [toastMessage, setToastMessage] = useState(null);
 
    const handleViewDetailsClick = clickedThing => {
-      const currentModalData = normalizedModalData(clickedThing);
-      setModalData(currentModalData);
+      setModalData(clickedThing);
    };
 
    const handleCloseModal = () => {
@@ -45,33 +24,45 @@ const ThingsTable = () => {
    };
 
    const columns = [
-      { key: 'name', label: 'Name' }
-      //   { key: 'type', label: 'Type' }
-   ];
-
-   const tableActions = [
       {
-         key: 'view',
-         label: 'View',
+         key: 'main_image_url',
+         label: '',
+         columnType: 'image',
          onClick: handleViewDetailsClick
       },
-      {
-         key: 'edit',
-         label: 'Edit',
-         onClick: row => console.log('Edit', row)
-      },
-      {
-         key: 'delete',
-         label: 'Delete',
-         onClick: row => console.log('Delete', row)
-      }
+      { key: 'name', label: 'Name', onClick: handleViewDetailsClick },
+      { key: 'type', label: 'Type' },
+      { key: 'rating', label: 'Rating' },
+      { key: 'statusText', label: 'Status' },
+      { key: 'country', label: 'Country' },
+      { key: 'language', label: 'Language' },
+      { key: 'date', label: 'Date' },
+      { key: 'genres', label: 'Genres' }
    ];
+
+   // const tableActions = [
+   //    {
+   //       key: 'view',
+   //       label: 'View',
+   //       onClick: handleViewDetailsClick
+   //    },
+   //    {
+   //       key: 'edit',
+   //       label: 'Edit',
+   //       onClick: row => console.log('Edit', row)
+   //    },
+   //    {
+   //       key: 'delete',
+   //       label: 'Delete',
+   //       onClick: row => console.log('Delete', row)
+   //    }
+   // ];
 
    const modalActions = [
       {
          key: 'hey',
          label: 'Hey Ben',
-         onClick: () => console.log('hey ben')
+         onClick: () => setToastMessage({ message: 'Hey Ben!' })
       },
       {
          key: 'edit',
@@ -98,7 +89,11 @@ const ThingsTable = () => {
          {({ reset }) => (
             <ErrorBoundary onReset={reset}>
                <Suspense fallback={<Loading />}>
-                  <Table data={things} columns={columns} actions={tableActions} />
+                  <Table
+                     data={things}
+                     columns={columns}
+                     // actions={tableActions}
+                  />
                   {modalData && (
                      <Modal
                         modalData={modalData}
@@ -107,7 +102,11 @@ const ThingsTable = () => {
                      />
                   )}
                   {toastMessage && (
-                     <Toast message={toastMessage} onClose={() => setToastMessage('')} />
+                     <Toast
+                        message={toastMessage.message}
+                        variant={toastMessage.variant}
+                        onClose={() => setToastMessage(null)}
+                     />
                   )}
                </Suspense>
             </ErrorBoundary>

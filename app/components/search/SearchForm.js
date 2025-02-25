@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { SearchTable } from './SearchTable';
+import { Button } from '@/app/components/button';
 
 export default function SearchForm() {
    const [query, setQuery] = useState('');
@@ -23,18 +24,26 @@ export default function SearchForm() {
                onChange={e => setQuery(e.target.value)}
                placeholder='Enter search query'
             />
-            <button type='submit' style={{ marginLeft: 24 }}>
+            <Button type='submit' linkStyle>
                Search for details
-            </button>
-            <button
-               style={{ marginLeft: 24 }}
+            </Button>
+            <Button
                type='button'
+               linkStyle
                onClick={() => console.log('would add thing with just a name')}>
                Add without details
-            </button>
+            </Button>
          </form>
-         {!query && <div><p>Start typing to get started</p></div>}
-         {query && !searchTerm && <div><p>Click the button to get started</p></div>}
+         {!query && (
+            <div>
+               <p>Start typing to get started</p>
+            </div>
+         )}
+         {query && !searchTerm && (
+            <div>
+               <p>Click the button to get started</p>
+            </div>
+         )}
          {searchTerm && <SearchTable searchTerm={searchTerm} />}
       </div>
    );

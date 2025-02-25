@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import axiosInstance from '../../utils/axiosInstance';
 import { auth0 } from '@/lib/auth0';
-// import { redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 // This is the API route that will be called from the client
 // handles POST requests to /api/things
@@ -83,10 +83,15 @@ export async function GET(request) {
       return NextResponse.json(response.data); // todo: verify status code 200 is defaulted to here
    } catch (error) {
       console.log('bb ~ route.js:86 ~ GET ~ error:', error);
-      if (error.response && error.response.status === 401) {
-         if (error.response.message === 'Authorization token expired') {
+      const stts = error.status || error.response.status || 'unknown';
+      if (stts === 401) {
+         if (
+            error.response?.data?.details?.message === 'Authorization token expired' ||
+            error.message === 'Authorization token expired' ||
+            error.response?.message === 'Authorization token expired'
+         ) {
             console.error('Authorization token expired, redirecting to login:', error);
-            // redirect('/auth/login'); // Navigate to the login page
+            redirect('/auth/login'); // Navigate to the login page
             return NextResponse.json(
                { message: 'Authorization token expired', details: error.response.data },
                { status: 401 }

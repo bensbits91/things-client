@@ -14,7 +14,7 @@ export const SearchTable = ({ searchTerm }) => {
    const queryClient = useQueryClient();
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler();
    const [modalData, setModalData] = useState(null);
-   const [toastMessage, setToastMessage] = useState('');
+   const [toastMessage, setToastMessage] = useState(null);
 
    const {
       data: things,
@@ -32,10 +32,12 @@ export const SearchTable = ({ searchTerm }) => {
    } = useSearch(searchTerm);
 
    const reultsWithUserInfo = useMemo(() => {
+      // todo: Would it be better to do this with mongoose aggregate?
       if (!results || !things) return [];
       return results.map(result => {
          const userThing = things.find(thing => {
-            const thingExternalId = thing.details[0]?.external_id;
+            console.log('bb ~ SearchTable.js:43 ~ reultsWithUserInfo ~ thing:', thing);
+            const thingExternalId = thing.external_id;
             if (!thingExternalId) return false;
             const resultExternalId = result.external_id?.toString();
             return thingExternalId === resultExternalId;
@@ -54,18 +56,27 @@ export const SearchTable = ({ searchTerm }) => {
 
    // import handleError into the component, and pass it to the hook
    // so they share the same handler and don't conflict with each other (i think)
-   const { addThingWithDetails } = useAddThingWithDetails(handleError);
+   const { addThingWithDetails } = useAddThingWithDetails(handleError, searchTerm);
 
    const handleAddThingClick = async externalId => {
       try {
          await addThingWithDetails(externalId);
-         setToastMessage('Thing added successfully :)');
+         setToastMessage({ message: 'Thing added successfully :)', variant: 'success' });
       } catch (error) {
          console.log('bb ~ SearchTable.js:56 ~ SearchTable ~ error:', error);
+         setToastMessage({ message: 'Thing NOT added :(', variant: 'error' });
          const { status } = error.response || error;
          if (status === 409) {
+            setToastMessage({
+               message: 'You already have that thing :)',
+               variant: 'info'
+            });
             handleError(new Error('Conflict error: The thing already exists.'));
          } else {
+            setToastMessage({
+               message: 'Unknown error adding that thing :/',
+               variant: 'success'
+            });
             handleError(new Error('Unknown error adding that thing :/'));
          }
       }
@@ -123,7 +134,7 @@ export const SearchTable = ({ searchTerm }) => {
       {
          key: 'hey',
          label: 'Hey Ben',
-         onClick: () => console.log('hey ben')
+         onClick: () => setToastMessage({ message: 'Hey Ben!' })
       },
       {
          key: 'add',
@@ -139,7 +150,7 @@ export const SearchTable = ({ searchTerm }) => {
 
    useEffect(() => {
       if (showAlert) {
-         setToastMessage(error.message);
+         setToastMessage({ message: error.message, variant: 'error' });
          setShowAlert(false);
       }
    }, [showAlert, error, setShowAlert]);
@@ -193,7 +204,11 @@ export const SearchTable = ({ searchTerm }) => {
                      />
                   )}
                   {toastMessage && (
-                     <Toast message={toastMessage} onClose={() => setToastMessage('')} />
+                     <Toast
+                        message={toastMessage.message}
+                        variant={toastMessage.variant}
+                        onClose={() => setToastMessage(null)}
+                     />
                   )}
                </Suspense>
             </ErrorBoundary>

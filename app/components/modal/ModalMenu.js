@@ -1,14 +1,15 @@
+import { Button } from '@/app/components/button';
 import styles from './Modal.module.css';
 
 const ModalMenu = ({ actions = [], userHasThing }) => (
-   <div className={styles.modalMenu}>
+   <div className={styles.menu}>
       {actions.map(action =>
          userHasThing && action.altText ? (
             <span key={action.key}>{action.altText}</span>
          ) : (
-            <button key={action.key} onClick={action.onClick}>
+            <Button key={action.key} onClick={action.onClick}>
                {action.label}
-            </button>
+            </Button>
          )
       )}
    </div>

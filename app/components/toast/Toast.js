@@ -1,7 +1,9 @@
-import styles from './Toast.module.css';
 import { useEffect } from 'react';
+import { Button } from '@/app/components/button';
+import styles from './Toast.module.css';
+import { classNames } from '@/app/utils/classNames';
 
-const Toast = ({ message, onClose }) => {
+const Toast = ({ message, variant = '', onClose }) => {
    useEffect(() => {
       const timer = setTimeout(() => {
          onClose();
@@ -11,9 +13,19 @@ const Toast = ({ message, onClose }) => {
    }, [onClose]);
 
    return (
-      <div className={styles.toast}>
+      <div
+         className={classNames(
+            styles.toast,
+            variant === 'success' && styles.success,
+            variant === 'warning' && styles.warning,
+            variant === 'info' && styles.info,
+            variant === 'error' && styles.error
+         )}>
          <p>{message}</p>
-         <button onClick={onClose}>Close</button>
+         {/* <button onClick={onClose}>x</button> */}
+         <Button closeButton onClick={onClose}>
+            x
+         </Button>
       </div>
    );
 };

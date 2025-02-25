@@ -68,7 +68,7 @@ export const useAddThing = () => {
 };
 
 // pass handleError function from component to hook
-export const useAddThingWithDetails = handleError => {
+export const useAddThingWithDetails = (handleError, searchTerm) => {
    const queryClient = useQueryClient();
    const addDetailMutation = useAddDetail();
    const addThingMutation = useAddThing();
@@ -79,7 +79,7 @@ export const useAddThingWithDetails = handleError => {
       isLoading: isLoadingResults,
       isError: isErrorResults
       // refetch
-   } = useSearch();
+   } = useSearch(searchTerm);
 
    const addThingWithDetails = async (externalId /* , detailToAdd */) => {
       try {
@@ -88,9 +88,11 @@ export const useAddThingWithDetails = handleError => {
          // If not found in db, add detail to db and get detail_id
          if (!detail) {
             // find detail we need from the results in cache
+            console.log('bb ~ things.js:92 ~ addThingWithDetails ~ results:', results);
             const detailToAdd = results.find(result => result.external_id === externalId);
+            console.log('bb ~ things.js:92 ~ addThingWithDetails ~ detailToAdd:', detailToAdd);
             if (!detailToAdd) {
-               console.info('Detail data to add not found');
+               console.error('Detail data to add not found');
                throw new Error('Failed to find detail in cached results');
             }
             detail = await addDetailMutation.mutateAsync(detailToAdd);

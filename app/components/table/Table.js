@@ -1,9 +1,12 @@
 'use client';
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { Button } from '@/app/components/button';
+import styles from './Table.module.css';
 
-// ✅ Table Component
 // const CustomTable = ({ columns, fetchData }) => {
 const CustomTable = ({ data, columns, actions = null }) => {
+   console.log('bb ~ Table.js:9 ~ CustomTable ~ data:', data);
    //    const [data, setData] = useState([]);
    const [sorting, setSorting] = useState({ key: null, order: 'asc' });
    const [filter, setFilter] = useState('');
@@ -11,7 +14,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
    //    const [loading, setLoading] = useState(false);
    const [selectedRows, setSelectedRows] = useState(new Set());
 
-   // 📌 Fetch initial data and handle pagination
+   // Fetch initial data and handle pagination
    //    const loadMoreRows = useCallback(async () => {
    //       setLoading(true);
    //       const newRows = await fetchData(page);
@@ -24,7 +27,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
    //       loadMoreRows();
    //    }, []);
 
-   // 📌 Handle sorting
+   // Handle sorting
    const handleSort = key => {
       setSorting(prev => ({
          key,
@@ -32,7 +35,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
       }));
    };
 
-   // 📌 Handle filtering
+   // Handle filtering
    const filteredData = useMemo(() => {
       return data
          .filter(row =>
@@ -47,7 +50,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
          });
    }, [data, filter, sorting]);
 
-   // 📌 Toggle row selection
+   // Toggle row selection
    const toggleRowSelection = id => {
       console.log('bb ~ Table.js:52 ~ CustomTable ~ id:', id);
       setSelectedRows(prev => {
@@ -57,7 +60,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
       });
    };
 
-   // 📌 Select/Deselect all rows
+   // Select/Deselect all rows
    const toggleSelectAll = () => {
       if (selectedRows.size === filteredData.length) {
          setSelectedRows(new Set());
@@ -66,19 +69,44 @@ const CustomTable = ({ data, columns, actions = null }) => {
       }
    };
 
+   const Column = ({ row, col }) => {
+      const { name } = row;
+      const { key, columnType } = col;
+      const val = row[key];
+
+      const colBody =
+         columnType === 'image' ? (
+            <div className={styles.imageWrapper}>
+               <Image src={val} alt={name} fill sizes='50px' />
+            </div>
+         ) : (
+            val
+         );
+
+      const clickableColBody = col.onClick ? (
+         <td key={col.key} className={styles.clickable} onClick={() => col.onClick(row)}>
+            {colBody}
+         </td>
+      ) : (
+         <td key={col.key}>{colBody}</td>
+      );
+
+      return clickableColBody;
+   };
+
    return (
       <div>
-         {/* 🔍 Filter Input */}
+         {/* Filter Input */}
          <input
+            className={styles.filterInput}
             type='text'
-            placeholder='Search...'
+            placeholder='Filter this list...'
             value={filter}
             onChange={e => setFilter(e.target.value)}
             style={{ marginBottom: 10, padding: 5, width: '100%' }}
          />
 
-         {/* 📊 Table */}
-         <table border='1' width='100%'>
+         <table className={styles.table}>
             <thead>
                <tr>
                   {/* Select All Checkbox */}
@@ -95,7 +123,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
                   {columns.map(col => (
                      <th
                         key={col.key}
-                        onClick={() => handleSort(col.key)}
+                        onClick={() => handleSort(col.key)} // todo: if type === 'image', don't sort
                         style={{ cursor: 'pointer' }}>
                         {col.label}{' '}
                         {sorting.key === col.key
@@ -119,7 +147,7 @@ const CustomTable = ({ data, columns, actions = null }) => {
                         />
                      </td>
                      {columns.map(col => (
-                        <td key={col.key}>{row[col.key]}</td>
+                        <Column key={col.key} row={row} col={col} />
                      ))}
                      {actions &&
                         actions.map((action, actionIndex) => (
@@ -127,14 +155,17 @@ const CustomTable = ({ data, columns, actions = null }) => {
                               {row.userHasThing && action.altText ? (
                                  <>{action.altText}</>
                               ) : (
-                                 <button
-                                    disabled={row.userHasThing && action.label === 'Add to List'} // todo: hacky fallback in case user doesn't have thing and no altText is provided
+                                 <Button
+                                    linkStyle
+                                    disabled={
+                                       row.userHasThing && action.label === 'Add to List'
+                                    } // todo: hacky fallback in case user doesn't have thing and no altText is provided
                                     onClick={e => {
                                        console.log('bb ~ Table.js ~ row:', row);
                                        action.onClick(row);
                                     }}>
                                     {action.label}
-                                 </button>
+                                 </Button>
                               )}
                            </td>
                         ))}
