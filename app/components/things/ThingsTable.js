@@ -8,6 +8,7 @@ import { Table } from '@/app/components/table';
 import { Modal } from '@/app/components/modal';
 import { Loading } from '@/app/components/loading';
 import { Toast } from '@/app/components/toast';
+import { Text } from '@/app/components/typography';
 
 const ThingsTable = () => {
    const { data: things, isLoading, isError } = useThings();
@@ -87,7 +88,7 @@ const ThingsTable = () => {
    }
 
    if (isError) {
-      return <p>Error loading things.</p>;
+      return <Text>Error loading things.</Text>;
    }
 
    return (

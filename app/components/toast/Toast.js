@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Heading } from '@/app/components/typography';
+import { Text } from '@/app/components/typography';
 import { Button } from '@/app/components/button';
 import { CloseIcon, WarnIcon, SuccessIcon, ErrorIcon, InfoIcon } from '../icons';
 import styles from './Toast.module.css';
@@ -54,8 +56,8 @@ const Toast = ({ heading, message, variant = '', onClose }) => {
          )}>
          {variant && <div className={styles.iconWrapper}>{icons[variant]}</div>}
          <div className={styles.content}>
-            <h3>{heading}</h3>
-            <p>{message}</p>
+            <Heading level='3'>{heading}</Heading>
+            <Text>{message}</Text>
          </div>
          <div className={styles.buttonWrapper}>
             <Button closeButton onClick={handleClose}>

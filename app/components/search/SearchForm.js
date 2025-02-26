@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { SearchTable } from './SearchTable';
+import { Text } from '@/app/components/typography';
 import { Button } from '@/app/components/button';
 
 export default function SearchForm() {
@@ -36,12 +37,12 @@ export default function SearchForm() {
          </form>
          {!query && (
             <div>
-               <p>Start typing to get started</p>
+               <Text>Start typing to get started</Text>
             </div>
          )}
          {query && !searchTerm && (
             <div>
-               <p>Click the button to get started</p>
+               <Text>Click the button to get started</Text>
             </div>
          )}
          {searchTerm && <SearchTable searchTerm={searchTerm} />}

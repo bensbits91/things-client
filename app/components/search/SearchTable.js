@@ -9,6 +9,7 @@ import { Table } from '@/app/components/table';
 import { Toast } from '@/app/components/toast';
 import { Loading } from '@/app/components/loading';
 import { Modal } from '@/app/components/modal';
+import { Text } from '@/app/components/typography';
 
 export const SearchTable = ({ searchTerm }) => {
    const queryClient = useQueryClient();
@@ -161,7 +162,7 @@ export const SearchTable = ({ searchTerm }) => {
    }
    if (isErrorResults) {
       console.log('bb ~ SearchTable.js:153 ~ SearchTable ~ resultsError:', resultsError);
-      return <p>Failed to load search results :(</p>;
+      return <Text>Failed to load search results :(</Text>;
    }
    if (isErrorThings) {
       console.log(
@@ -179,11 +180,11 @@ export const SearchTable = ({ searchTerm }) => {
       ) {
          router.push('/auth/login'); // todo: Not working
       }
-      return <p>Failed to load things :(</p>;
+      return <Text>Failed to load things :(</Text>;
    }
 
    if (!results || results.length === 0) {
-      return <p>Search for something to get started...</p>;
+      return <Text>Search for something to get started...</Text>;
    }
 
    return (

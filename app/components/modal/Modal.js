@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import ModalMenu from './ModalMenu';
+import { Heading } from '@/app/components/typography';
 import { Button } from '@/app/components/button';
 import { CloseIcon } from '@/app/components/icons';
 import styles from './Modal.module.css';
@@ -67,7 +68,7 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
                isClosing && 'slideDownHide'
             )}>
             <div className={styles.header}>
-               <h1>{name}</h1>
+               <Heading level='1'>{name}</Heading>
                <div>
                   <Button closeButton onClick={handleClose}>
                      <CloseIcon />
