@@ -13,7 +13,7 @@
    width: 100%;
    border-collapse: collapse;
    border-spacing: 0;
-   background-color: var(--gray-80);
+   background-color: color-mix(in oklab, var(--gray) 80%, white);
 
    thead {
       height: 3rem;
@@ -27,12 +27,16 @@
       height: 4.2rem;
 
       &:nth-child(2n) {
-         background-color: var(--gray-70);
+         background-color: color-mix(in oklab, var(--gray) 70%, white);
       }
 
       td {
          padding-left: 0.5rem;
          padding-right: 0.5rem;
+
+         .iconWrapper {
+            max-width: 2rem;
+         }
          
          &.clickable {
             cursor: pointer;
@@ -40,7 +44,7 @@
             transition: all ease-in-out 300ms;
 
             &:hover {
-               background-color: var(--gray-60);
+               background-color: color-mix(in oklab, var(--gray) 60%, white);
                color: var(--link-hover-color);
 
                img {

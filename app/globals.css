@@ -5,127 +5,23 @@
 
 @media (prefers-color-scheme: dark) {
    :root {
-      /* --background: #0a0a0a;
-      --foreground: #ededed; */
-
       --white: #fff;
       --black: #000;
-
       --gray: #050607;
-      --gray-95: #0a0c0e;
-      --gray-90: #0f1215;
-      --gray-85: #14181c;
-      --gray-80: #1a1e23;
-      --gray-75: #1f242a;
-      --gray-70: #242a31;
-      --gray-65: #293038;
-      --gray-60: #2e363f;
-      --gray-55: #343d46;
-      --gray-50: #343d46;
-      --gray-45: #485058;
-      --gray-40: #5c636a;
-      --gray-35: #70777d;
-      --gray-30: #858a90;
-      --gray-25: #999ea2;
-      --gray-20: #adb1b5;
-      --gray-15: #c2c4c7;
-      --gray-10: #d6d8da;
-      --gray-5: #eaebec;
-
       --teal: #00d4b0;
-      --teal-90: #19d8b7;
-      --teal-80: #32dcbf;
-      --teal-70: #4ce0c7;
-      --teal-60: #66e5cf;
-      --teal-50: #7fe9d7;
-      --teal-40: #99eddf;
-      --teal-30: #b2f2e7;
-      --teal-20: #ccf6ef;
-      --teal-10: #e5faf7;
-
       --red: #ff7e9b;
-      --red-90: #ff8aa5;
-      --red-80: #ff97af;
-      --red-70: #ffa4b9;
-      --red-60: #ffb1c3;
-      --red-50: #ffbecd;
-      --red-40: #ffcbd7;
-      --red-30: #ffd8e1;
-      --red-20: #ffe5eb;
-      --red-10: #fff2f5;
-
       --pink: #ff7edb;
-      --pink-90: #ff8ade;
-      --pink-80: #ff97e2;
-      --pink-70: #ffa4e5;
-      --pink-60: #ffb1e9;
-      --pink-50: #ffbeed;
-      --pink-40: #ffcbf0;
-      --pink-30: #ffd8f4;
-      --pink-20: #ffe5f7;
-      --pink-10: #fff2fb;
-
       --blue: #7edbff;
-      --blue-90: #8adeff;
-      --blue-80: #97e2ff;
-      --blue-70: #a4e5ff;
-      --blue-60: #b1e9ff;
-      --blue-50: #beedff;
-      --blue-40: #cbf0ff;
-      --blue-30: #d8f4ff;
-      --blue-20: #e5f7ff;
-      --blue-10: #f2fbff;
-
       --yellow: #dbff7e;
-      --yellow-90: #deff8a;
-      --yellow-80: #e2ff97;
-      --yellow-70: #e5ffa4;
-      --yellow-60: #e9ffb1;
-      --yellow-50: #edffbe;
-      --yellow-40: #f0ffcb;
-      --yellow-30: #f4ffd8;
-      --yellow-20: #f7ffe5;
-      --yellow-10: #fbfff2;
-
       --green: #7effa2;
-      --green-90: #8affab;
-      --green-80: #97ffb4;
-      --green-70: #a4ffbd;
-      --green-60: #b1ffc7;
-      --green-50: #beffd0;
-      --green-40: #cbffd9;
-      --green-30: #d8ffe3;
-      --green-20: #e5ffec;
-      --green-10: #f2fff5;
-
       --orange: #ffe37e;
-      --orange-90: #ffe58a;
-      --orange-80: #ffe897;
-      --orange-70: #ffeba4;
-      --orange-60: #ffeeb1;
-      --orange-50: #fff1be;
-      --orange-40: #fff3cb;
-      --orange-30: #fff6d8;
-      --orange-20: #fff9e5;
-      --orange-10: #fffcf2;
-
       --eggplant: #2a2139;
-      --eggplant-90: #3f374c;
-      --eggplant-80: #544d60;
-      --eggplant-70: #696374;
-      --eggplant-60: #7f7988;
-      --eggplant-50: #94909c;
-      --eggplant-40: #a9a6af;
-      --eggplant-30: #bfbcc3;
-      --eggplant-20: #d4d2d7;
-      --eggplant-10: #e9e8eb;
 
-
-      --background: var(--gray-80);
-      --foreground: var(--gray-10);
+      --background: color-mix(in oklab, var(--gray) 80%, white);
+      --foreground: color-mix(in oklab, var(--gray) 10%, white);
 
       --link-color: var(--teal);
-      --link-hover-color: var(--teal-50);
+      --link-hover-color: color-mix(in oklab, var(--teal) 60%, white);
    }
 }
 
@@ -162,4 +58,64 @@ a {
    html {
       color-scheme: dark;
    }
+}
+
+/* animation */
+
+.willAppearFromRight {
+   transform: translateX(100vw);
+}
+@keyframes slideLeftShow {
+   from {
+      opacity: 0;
+   }
+   to {
+      transform: translateX(0);
+      opacity: 1;
+   }
+}
+@keyframes slideRightHide {
+   from {
+      transform: translateX(0);
+      opacity: 1;
+   }
+   to {
+      transform: translateX(100vw);
+      opacity: 0;
+   }
+}
+.slideLeftShow {
+   animation: slideLeftShow 150ms ease-out forwards;
+}
+.slideRightHide {
+   animation: slideRightHide 150ms ease-out forwards;
+}
+
+.willAppearFromBottom {
+   transform: translateY(100vh);
+}
+@keyframes slideUpShow {
+   from {
+      opacity: 0;
+   }
+   to {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+@keyframes slideDownHide {
+   from {
+      transform: translateY(0);
+      opacity: 1;
+   }
+   to {
+      transform: translateY(100vh);
+      opacity: 0;
+   }
+}
+.slideUpShow {
+   animation: slideUpShow 150ms ease-out forwards;
+}
+.slideDownHide {
+   animation: slideDownHide 150ms ease-out forwards;
 }

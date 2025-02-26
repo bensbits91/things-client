@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import ModalMenu from './ModalMenu';
 import { Button } from '@/app/components/button';
+import { CloseIcon } from '@/app/components/icons';
 import styles from './Modal.module.css';
 import { classNames } from '@/app/utils/classNames';
 
@@ -54,24 +55,24 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
    return (
       <>
          <div
-            className={classNames(
-               styles.overlay,
-               isClosing && styles.hide
-            )}
+            className={classNames(styles.overlay, isClosing && styles.hide)}
             onClick={handleClose}
          />
          <div
             className={classNames(
                styles.modal,
                isVisible && 'hasOverlay',
-               isVisible && !isClosing && styles.slideUpShow,
-               isClosing && styles.slideDownHide
+               'willAppearFromBottom',
+               isVisible && !isClosing && 'slideUpShow',
+               isClosing && 'slideDownHide'
             )}>
             <div className={styles.header}>
                <h1>{name}</h1>
-               <Button closeButton onClick={handleClose}>
-                  x
-               </Button>
+               <div>
+                  <Button closeButton onClick={handleClose}>
+                     <CloseIcon />
+                  </Button>
+               </div>
             </div>
             <div className={styles.content}>
                <div className={styles.hero}>

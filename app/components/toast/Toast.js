@@ -1,31 +1,67 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/app/components/button';
+import { CloseIcon, WarnIcon, SuccessIcon, ErrorIcon, InfoIcon } from '../icons';
 import styles from './Toast.module.css';
 import { classNames } from '@/app/utils/classNames';
 
-const Toast = ({ message, variant = '', onClose }) => {
+const Toast = ({ heading, message, variant = '', onClose }) => {
+   const [isVisible, setIsVisible] = useState(false);
+   const [isClosing, setIsClosing] = useState(false);
+
+   useEffect(() => {
+      if (message) {
+         setIsVisible(true);
+      } else {
+         setIsClosing(true);
+      }
+   }, [message]);
+
+   if (!message && !isClosing) return null;
+
+   const handleClose = () => {
+      setIsClosing(true);
+      setTimeout(() => {
+         onClose();
+      }, 300);
+   };
+
    useEffect(() => {
       const timer = setTimeout(() => {
-         onClose();
-      }, 7000); // Auto close after 3 seconds
+         handleClose();
+      }, 5000); // Auto close after delay
 
       return () => clearTimeout(timer);
-   }, [onClose]);
+   }, [handleClose]);
+
+   const icons = {
+      success: <SuccessIcon />,
+      warning: <WarnIcon />,
+      info: <InfoIcon />,
+      error: <ErrorIcon />
+   };
 
    return (
       <div
          className={classNames(
             styles.toast,
+            'willAppearFromRight',
+            isVisible && !isClosing && 'slideLeftShow',
+            isClosing && 'slideRightHide',
             variant === 'success' && styles.success,
             variant === 'warning' && styles.warning,
             variant === 'info' && styles.info,
             variant === 'error' && styles.error
          )}>
-         <p>{message}</p>
-         {/* <button onClick={onClose}>x</button> */}
-         <Button closeButton onClick={onClose}>
-            x
-         </Button>
+         {variant && <div className={styles.iconWrapper}>{icons[variant]}</div>}
+         <div className={styles.content}>
+            <h3>{heading}</h3>
+            <p>{message}</p>
+         </div>
+         <div className={styles.buttonWrapper}>
+            <Button closeButton onClick={handleClose}>
+               <CloseIcon />
+            </Button>
+         </div>
       </div>
    );
 };

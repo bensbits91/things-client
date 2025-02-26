@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Button } from '@/app/components/button';
 import styles from './Table.module.css';
+import { TvIcon, MovieIcon, BookIcon, VideoGameIcon } from '../icons';
 
 // const CustomTable = ({ columns, fetchData }) => {
 const CustomTable = ({ data, columns, actions = null }) => {
@@ -74,11 +75,29 @@ const CustomTable = ({ data, columns, actions = null }) => {
       const { key, columnType } = col;
       const val = row[key];
 
+      let typeIcon = <TvIcon />;
+      switch (row.type) {
+         case 'Movie':
+            typeIcon = <MovieIcon />;
+            break;
+         case 'Book':
+            typeIcon = <BookIcon />;
+            break;
+         case 'Video Game':
+            typeIcon = <VideoGameIcon />;
+            break;
+         default:
+            typeIcon = <TvIcon />;
+      }
+
+      // const valBody = columnType === 'icon' && key === 'type' ? typeIcon : val;
       const colBody =
          columnType === 'image' ? (
             <div className={styles.imageWrapper}>
                <Image src={val} alt={name} fill sizes='50px' />
             </div>
+         ) : columnType === 'icon' && key === 'type' ? (
+            <div className={styles.iconWrapper}>{typeIcon}</div>
          ) : (
             val
          );

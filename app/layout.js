@@ -5,6 +5,7 @@ import { NavBar } from './components/nav';
 import { Footer } from './components/footer';
 import { Auth0Provider } from '@auth0/nextjs-auth0';
 import QueryProvider from './components/QueryProvider';
+import Head from 'next/head';
 
 const geistSans = Geist({
    variable: '--font-geist-sans',
@@ -24,6 +25,9 @@ export const metadata = {
 export default async function RootLayout({ children }) {
    return (
       <html lang='en'>
+         <Head>
+            <link rel='icon' type='image/svg+xml' href='/icon.svg' sizes='any' />
+         </Head>
          <body className={`${geistSans.variable} ${geistMono.variable}`}>
             <Auth0Provider>
                <QueryProvider>

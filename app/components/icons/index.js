@@ -1,0 +1,10 @@
+export { default as TvIcon } from './TvIcon';
+export { default as MovieIcon } from './MovieIcon';
+export { default as BookIcon } from './BookIcon';
+export { default as VideoGameIcon } from './VideoGameIcon';
+export { default as CloseIcon } from './CloseIcon';
+export { default as WarnIcon } from './WarnIcon';
+export { default as SuccessIcon } from './SuccessIcon';
+export { default as ErrorIcon } from './ErrorIcon';
+export { default as InfoIcon } from './InfoIcon';
+export { default as StarIcon } from './StarIcon';

@@ -31,7 +31,7 @@ const ThingsTable = () => {
          onClick: handleViewDetailsClick
       },
       { key: 'name', label: 'Name', onClick: handleViewDetailsClick },
-      { key: 'type', label: 'Type' },
+      { key: 'type', label: 'Type', columnType: 'icon' },
       { key: 'rating', label: 'Rating' },
       { key: 'statusText', label: 'Status' },
       { key: 'country', label: 'Country' },
@@ -62,7 +62,13 @@ const ThingsTable = () => {
       {
          key: 'hey',
          label: 'Hey Ben',
-         onClick: () => setToastMessage({ message: 'Hey Ben!' })
+         onClick: () =>
+            setToastMessage({
+               heading: 'Hey Ben!',
+               message:
+                  "This'll be more info. This'll be more info. This'll be more info. This'll be more info. This'll be more info.",
+               variant: 'info'
+            })
       },
       {
          key: 'edit',
@@ -103,6 +109,7 @@ const ThingsTable = () => {
                   )}
                   {toastMessage && (
                      <Toast
+                        heading={toastMessage.heading}
                         message={toastMessage.message}
                         variant={toastMessage.variant}
                         onClose={() => setToastMessage(null)}
