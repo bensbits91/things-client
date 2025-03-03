@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
+import { useStatuses } from '@/app/hooks/useStatuses';
+import ModalHeader from './ModalHeader';
 import ModalMenu from './ModalMenu';
-import { Heading } from '@/app/components/typography';
-import { Button } from '@/app/components/button';
-import { CloseIcon } from '@/app/components/icons';
+import ModalEditables from './ModalEditables';
+import ModalImage from './ModalImage';
+import ModalDetails from './ModalDetails';
+import { Overlay } from '@/app/components//overlay';
 import styles from './Modal.module.css';
 import { classNames } from '@/app/utils/classNames';
 
-const Modal = ({ modalData, actions = [], handleCloseModal }) => {
+const Modal = ({ modalData, actions = [], handleCloseModal, handleEdit = null }) => {
    const [isVisible, setIsVisible] = useState(false);
    const [isClosing, setIsClosing] = useState(false);
 
@@ -24,7 +26,8 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
    const {
       name,
       rating,
-      statusText,
+      status,
+      // statusText,
       review,
       notes,
       main_image_url,
@@ -34,8 +37,20 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
       country,
       language,
       date,
-      userHasThing // only applicable in SearchTable
+      userHasThing = true
    } = modalData || {};
+
+   const {
+      data: statuses,
+      isLoading: isLoadingStatuses,
+      isError: isErrorStatuses
+   } = useStatuses();
+   const typeStatuses = statuses ? statuses[type] : {};
+
+   const statusOptions = Object.entries(typeStatuses).map(([key, value]) => ({
+      value: parseInt(key), // Object.entries converts keys to strings, but we need integers
+      label: value
+   }));
 
    const handleClose = () => {
       setIsClosing(true);
@@ -44,21 +59,23 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
       }, 300);
    };
 
-   const Editables = () => {
-      return (
-         <div>
-            <div>{rating}</div>
-            <div>{statusText}</div>
-         </div>
-      );
+   const handleRatingEdit = newRating => {
+      if (handleEdit) {
+         const newItem = { ...modalData, rating: newRating };
+         handleEdit(newItem);
+      }
+   };
+
+   const handleStatusEdit = selectedStatus => {
+      if (handleEdit) {
+         const newItem = { ...modalData, status: selectedStatus.value };
+         handleEdit(newItem);
+      }
    };
 
    return (
       <>
-         <div
-            className={classNames(styles.overlay, isClosing && styles.hide)}
-            onClick={handleClose}
-         />
+         <Overlay shadow hide={isClosing} handleClick={handleClose} />
          <div
             className={classNames(
                styles.modal,
@@ -67,39 +84,33 @@ const Modal = ({ modalData, actions = [], handleCloseModal }) => {
                isVisible && !isClosing && 'slideUpShow',
                isClosing && 'slideDownHide'
             )}>
-            <div className={styles.header}>
-               <Heading level='1'>{name}</Heading>
-               <div>
-                  <Button closeButton onClick={handleClose}>
-                     <CloseIcon />
-                  </Button>
-               </div>
-            </div>
+            <ModalHeader headingText={name} handleClose={handleClose} />
             <div className={styles.content}>
                <div className={styles.hero}>
-                  {main_image_url && (
-                     <div className={styles.imageWrapper}>
-                        <Image
-                           src={main_image_url}
-                           alt={name}
-                           fill
-                           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                        />
-                     </div>
-                  )}
+                  <ModalImage imgUrl={main_image_url} altText={name} />
                   <div>
                      <ModalMenu actions={actions} userHasThing={userHasThing} />
-                     <Editables />
-                     <div className={styles.details}>
-                        <div>{description}</div>
-                        <div>{type}</div>
-                        <div>Genres: {genres?.join(', ')}</div>
-                        <div>{country}</div>
-                        <div>{language}</div>
-                        <div>{date}</div>
-                     </div>
+                     {userHasThing && (
+                        <ModalEditables
+                           rating={rating}
+                           status={status}
+                           statusOptions={statusOptions}
+                           handleRatingEdit={handleRatingEdit}
+                           handleStatusEdit={handleStatusEdit}
+                        />
+                     )}
+                     <ModalDetails
+                        type={type}
+                        country={country}
+                        language={language}
+                        date={date}
+                        genres={genres}
+                        description={description}
+                     />
                   </div>
                </div>
+               <div>Review</div>
+               <div>Notes</div>
             </div>
          </div>
       </>

@@ -12,6 +12,7 @@ import { Text } from '@/app/components/typography';
 
 const ThingsTable = () => {
    const { data: things, isLoading, isError } = useThings();
+   console.log('bb ~ ThingsTable.js:15 ~ ThingsTable ~ things:', things);
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler(); // todo
    const [modalData, setModalData] = useState(null);
    const [toastMessage, setToastMessage] = useState(null);
@@ -28,12 +29,17 @@ const ThingsTable = () => {
       {
          key: 'main_image_url',
          label: '',
-         columnType: 'image',
-         onClick: handleViewDetailsClick
+         columnType: 'image'
+         // onClick: handleViewDetailsClick
       },
-      { key: 'name', label: 'Name', onClick: handleViewDetailsClick },
+      {
+         key: 'name',
+         label: 'Name',
+         truncateLength: 50
+         // onClick: handleViewDetailsClick
+      },
       { key: 'type', label: 'Type', columnType: 'icon' },
-      { key: 'rating', label: 'Rating' },
+      { key: 'rating', label: 'Rating', columnType: 'rating' },
       { key: 'statusText', label: 'Status' },
       { key: 'country', label: 'Country' },
       { key: 'language', label: 'Language' },
@@ -91,6 +97,10 @@ const ThingsTable = () => {
       return <Text>Error loading things.</Text>;
    }
 
+   const handleModalEdit = newThing => {
+      console.log('bb ~ ThingsTable.js:96 ~ handleModalEdit ~ newThing:', newThing);
+   };
+
    return (
       <QueryErrorResetBoundary>
          {({ reset }) => (
@@ -99,6 +109,7 @@ const ThingsTable = () => {
                   <Table
                      data={things}
                      columns={columns}
+                     handleRowClick={handleViewDetailsClick}
                      // actions={tableActions}
                   />
                   {modalData && (
@@ -106,6 +117,7 @@ const ThingsTable = () => {
                         modalData={modalData}
                         actions={modalActions}
                         handleCloseModal={handleCloseModal}
+                        handleEdit={handleModalEdit}
                      />
                   )}
                   {toastMessage && (

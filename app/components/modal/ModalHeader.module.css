@@ -1,0 +1,15 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    button { /* todo: need a class here */
+       height: 2rem;
+       width: 2rem;
+       color: color-mix(in oklab, var(--gray) 50%, white);
+       transition: all 300ms ease-in-out;
+
+       &:hover {
+          color: color-mix(in oklab, var(--gray) 30%, white);
+       }
+    }
+ }

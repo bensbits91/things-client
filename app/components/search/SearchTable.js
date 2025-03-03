@@ -11,6 +11,8 @@ import { Loading } from '@/app/components/loading';
 import { Modal } from '@/app/components/modal';
 import { Text } from '@/app/components/typography';
 
+// todo: use useTable hook
+
 export const SearchTable = ({ searchTerm }) => {
    const queryClient = useQueryClient();
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler();
@@ -37,7 +39,6 @@ export const SearchTable = ({ searchTerm }) => {
       if (!results || !things) return [];
       return results.map(result => {
          const userThing = things.find(thing => {
-            console.log('bb ~ SearchTable.js:43 ~ reultsWithUserInfo ~ thing:', thing);
             const thingExternalId = thing.external_id;
             if (!thingExternalId) return false;
             const resultExternalId = result.external_id?.toString();
@@ -83,9 +84,10 @@ export const SearchTable = ({ searchTerm }) => {
       }
    };
 
-   const handleViewDetailsClick = externalId => {
+   const handleViewDetailsClick = row => {
+      console.log('bb ~ SearchTable.js:86 ~ SearchTable ~ row:', row);
       const currentModalData = reultsWithUserInfo.find(
-         result => result.external_id === externalId
+         result => result.external_id === row.external_id
       );
       setModalData(currentModalData);
    };
@@ -106,16 +108,31 @@ export const SearchTable = ({ searchTerm }) => {
    }, [searchTerm]);
 
    const columns = [
-      { key: 'name', label: 'Name' },
-      { key: 'type', label: 'Type' }
+      {
+         key: 'main_image_url',
+         label: '',
+         columnType: 'image'
+         // onClick: handleViewDetailsClick
+      },
+      {
+         key: 'name',
+         label: 'Name',
+         truncateLength: 35
+         // onClick: handleViewDetailsClick
+      },
+      { key: 'type', label: 'Type', columnType: 'icon' },
+      { key: 'country', label: 'Country' },
+      { key: 'language', label: 'Language' },
+      { key: 'date', label: 'Date' },
+      { key: 'genres', label: 'Genres' }
    ];
 
    const tableActions = [
-      {
-         key: 'view',
-         label: 'View Details',
-         onClick: row => handleViewDetailsClick(row.external_id)
-      },
+      // {
+      //    key: 'view',
+      //    label: 'View Details',
+      //    onClick: row => handleViewDetailsClick(row.external_id)
+      // },
       {
          key: 'add',
          label: 'Add to List',
@@ -135,7 +152,13 @@ export const SearchTable = ({ searchTerm }) => {
       {
          key: 'hey',
          label: 'Hey Ben',
-         onClick: () => setToastMessage({ message: 'Hey Ben!' })
+         onClick: () =>
+            setToastMessage({
+               heading: 'Hey Ben!',
+               message:
+                  'All work and no play... All work and no play... All work and no play... All work and no play... All work and no play...',
+               variant: 'success'
+            })
       },
       {
          key: 'add',
@@ -195,6 +218,7 @@ export const SearchTable = ({ searchTerm }) => {
                   <Table
                      data={reultsWithUserInfo}
                      columns={columns}
+                     handleRowClick={handleViewDetailsClick}
                      actions={tableActions}
                   />
                   {modalData && (

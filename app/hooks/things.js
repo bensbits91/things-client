@@ -125,3 +125,8 @@ export const useAddThingWithDetails = (handleError, searchTerm) => {
 
    return { addThingWithDetails };
 };
+
+// todo: need to write a new hook "useUpdateThing" that sends a put with 
+// the updated thing in the body
+// and the thing _id in the params
+// and invalidates the 'things' cache

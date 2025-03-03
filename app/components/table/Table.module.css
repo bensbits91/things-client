@@ -1,14 +1,3 @@
-.filterInput {
-   margin-bottom: 0.75rem;
-   padding: 0.25rem;
-   width: 100%;
-   border-collapse: collapse;
-   border-width: 0 0 1px 0;
-   border-style: solid;
-   border-color: #ccc;
-   background-color: #222;
-}
-
 .table {
    width: 100%;
    border-collapse: collapse;
@@ -18,52 +7,5 @@
    thead {
       height: 3rem;
       text-align: left;
-   }
-
-   tr {
-      border-width: 1px 0 0 0;
-      border-style: solid;
-      border-color: #333;
-      height: 4.2rem;
-
-      &:nth-child(2n) {
-         background-color: color-mix(in oklab, var(--gray) 70%, white);
-      }
-
-      td {
-         padding-left: 0.5rem;
-         padding-right: 0.5rem;
-
-         .iconWrapper {
-            max-width: 2rem;
-         }
-         
-         &.clickable {
-            cursor: pointer;
-            color: var(--link-color);
-            transition: all ease-in-out 300ms;
-
-            &:hover {
-               background-color: color-mix(in oklab, var(--gray) 60%, white);
-               color: var(--link-hover-color);
-
-               img {
-                  transform: scale(1.05);
-               }
-            }
-         }
-
-         .imageWrapper {
-            position: relative;
-            min-height: 50px;
-            width: 100%;
-            max-width: 30px;
-            min-width: 50px;
-
-            img {
-               object-fit: contain;
-            }
-         }
-      }
    }
 }
