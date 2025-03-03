@@ -28,6 +28,7 @@ const Modal = ({ modalData, actions = [], handleCloseModal, handleEdit = null })
       rating,
       status,
       // statusText,
+      times,
       review,
       notes,
       main_image_url,
@@ -73,6 +74,13 @@ const Modal = ({ modalData, actions = [], handleCloseModal, handleEdit = null })
       }
    };
 
+   const handleTimesEdit = newTimes => {
+      if (handleEdit) {
+         const newItem = { ...modalData, times: newTimes };
+         handleEdit(newItem);
+      }
+   };
+
    return (
       <>
          <Overlay shadow hide={isClosing} handleClick={handleClose} />
@@ -94,9 +102,11 @@ const Modal = ({ modalData, actions = [], handleCloseModal, handleEdit = null })
                         <ModalEditables
                            rating={rating}
                            status={status}
+                           times={times}
                            statusOptions={statusOptions}
                            handleRatingEdit={handleRatingEdit}
                            handleStatusEdit={handleStatusEdit}
+                           handleTimesEdit={handleTimesEdit}
                         />
                      )}
                      <ModalDetails

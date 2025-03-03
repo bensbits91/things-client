@@ -111,4 +111,53 @@ export async function GET(request) {
    }
 }
 
-// todo: need PUT and DELETE
+export async function PUT(request) {
+   const thingToUpdate = await request.json();
+   const { _id } = thingToUpdate;
+
+   const {
+      tokenSet: { accessToken }
+   } = await auth0.getSession();
+
+   // Forward the request to the server at port 3000
+   try {
+      const response = await axiosInstance.put(
+         `http://localhost:3000/things/${_id}`,
+         { ...thingToUpdate },
+         {
+            headers: {
+               'Content-Type': 'application/json',
+               Authorization: `Bearer ${accessToken}`
+            }
+         }
+      );
+
+      return NextResponse.json(response.data);
+   } catch (error) {
+      console.log('bb ~ route.js ~ error:', error);
+      if (error.response && error.response.status === 401) {
+         const msg =
+            error.response.data.message ||
+            error.response.details.message ||
+            error.message;
+         if (msg === 'Authorization token expired') {
+            console.error('Authorization token expired, redirecting to login:', error);
+            // redirect('/auth/login'); // Navigate to the login page
+            return NextResponse.json(
+               { message: 'Authorization token expired', details: error.response.data },
+               { status: 401 }
+            );
+         }
+         console.error('Unauthorized:', error);
+         return NextResponse.json(
+            { message: 'Unauthorized', details: error.response.data },
+            { status: 401 }
+         );
+      }
+      console.error('Error forwarding PUT request:', error);
+      return NextResponse.json(
+         { message: 'Error forwarding PUT request', details: error.message },
+         { status: 500 }
+      );
+   }
+}

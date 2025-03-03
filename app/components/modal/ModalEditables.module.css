@@ -1,5 +1,12 @@
 .wrap {
    display: flex;
-   align-items: center;
-   gap: 3rem;
+   align-items: flex-start;
+   /* gap: 3rem; */
+   flex-direction: column;
+
+   .statusWrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+   }
 }

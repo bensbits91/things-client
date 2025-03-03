@@ -1,7 +1,7 @@
 'use client';
 import { useState, Suspense } from 'react';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { useThings } from '@/app/hooks/things';
+import { useThings, useUpdateThing } from '@/app/hooks/things';
 import { useErrorHandler } from '@/app/hooks/errors';
 import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { Table } from '@/app/components/table';
@@ -12,7 +12,6 @@ import { Text } from '@/app/components/typography';
 
 const ThingsTable = () => {
    const { data: things, isLoading, isError } = useThings();
-   console.log('bb ~ ThingsTable.js:15 ~ ThingsTable ~ things:', things);
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler(); // todo
    const [modalData, setModalData] = useState(null);
    const [toastMessage, setToastMessage] = useState(null);
@@ -97,8 +96,11 @@ const ThingsTable = () => {
       return <Text>Error loading things.</Text>;
    }
 
-   const handleModalEdit = newThing => {
-      console.log('bb ~ ThingsTable.js:96 ~ handleModalEdit ~ newThing:', newThing);
+   const { updateThingMutation } = useUpdateThing(handleError);
+
+   const handleModalEdit = async newThing => {
+      await updateThingMutation.mutateAsync(newThing);
+      setModalData(newThing);
    };
 
    return (
