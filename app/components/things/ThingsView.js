@@ -5,16 +5,21 @@ import { useThings, useUpdateThing } from '@/app/hooks/things';
 import { useErrorHandler } from '@/app/hooks/errors';
 import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { Table } from '@/app/components/table';
+import { Grid } from '@/app/components/grid';
+import { Wall } from '@/app/components/wall';
 import { Modal } from '@/app/components/modal';
 import { Loading } from '@/app/components/loading';
 import { Toast } from '@/app/components/toast';
 import { Text } from '@/app/components/typography';
 
-const ThingsTable = () => {
+import ViewHeader from './ViewHeader';
+
+const ThingsView = () => {
    const { data: things, isLoading, isError } = useThings();
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler(); // todo
    const [modalData, setModalData] = useState(null);
    const [toastMessage, setToastMessage] = useState(null);
+   const [view, setView] = useState('table');
 
    const handleViewDetailsClick = clickedThing => {
       setModalData(clickedThing);
@@ -103,17 +108,37 @@ const ThingsTable = () => {
       setModalData(newThing);
    };
 
+   const handleViewChange = key => {
+      console.log('bb ~ ThingsView.js:111 ~ ThingsView ~ key:', key);
+      setView(key);
+   };
+
+   const viewOptions = ['Table', 'Grid', 'List', 'Wall'];
+   const viewTools = viewOptions.map(option => ({
+      key: option.toLowerCase(),
+      label: option,
+      onClick: handleViewChange
+   }));
+
    return (
       <QueryErrorResetBoundary>
          {({ reset }) => (
             <ErrorBoundary onReset={reset}>
                <Suspense fallback={<Loading />}>
-                  <Table
-                     data={things}
-                     columns={columns}
-                     handleRowClick={handleViewDetailsClick}
-                     // actions={tableActions}
-                  />
+                  <ViewHeader heading='My Things' tools={viewTools} />
+                  {view === 'table' && (
+                     <Table
+                        data={things}
+                        columns={columns}
+                        handleRowClick={handleViewDetailsClick}
+                        // actions={tableActions}
+                     />
+                  )}
+                  {view === 'grid' && <Grid data={things} />}
+                  {view === 'list' && <div>not sure if we'll do a list view...</div>}
+                  {view === 'wall' && (
+                     <Wall data={things} handleItemClick={handleViewDetailsClick} />
+                  )}
                   {modalData && (
                      <Modal
                         modalData={modalData}
@@ -137,4 +162,4 @@ const ThingsTable = () => {
    );
 };
 
-export default ThingsTable;
+export default ThingsView;

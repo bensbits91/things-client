@@ -1,8 +1,7 @@
 import axiosInstance from '../utils/axiosInstance';
 import { auth0 } from '@/lib/auth0';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
-import { ThingsTable } from '@/app/components/things';
-import { Heading } from '@/app/components/typography';
+import { ThingsView } from '@/app/components/things';
 
 const getInitialData = async () => {
    try {
@@ -44,12 +43,9 @@ const ThingsPage = async () => {
 
    return (
       <div>
-         <Heading level='1'>My Things</Heading>
-         <div>
-            <HydrationBoundary state={dehydratedState}>
-               <ThingsTable />
-            </HydrationBoundary>
-         </div>
+         <HydrationBoundary state={dehydratedState}>
+            <ThingsView />
+         </HydrationBoundary>
       </div>
    );
 };

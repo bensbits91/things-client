@@ -1,1 +1,1 @@
-export { default as ThingsTable } from './ThingsTable';
+export { default as ThingsView } from './ThingsView';

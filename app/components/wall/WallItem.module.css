@@ -1,0 +1,26 @@
+.imageWrapper {
+   position: relative;
+   min-height: 300px;
+   max-width: 240px;
+   min-width: 200px;
+   width: 100%;
+
+   img {
+      object-fit: contain;
+   }
+
+   &.clickable {
+      cursor: pointer;
+      transition: all ease-in-out 300ms;
+
+      img {
+         transition: all ease-in-out 300ms;
+      }
+
+      &:hover {
+         img {
+            transform: scale(1.05);
+         }
+      }
+   }
+}
