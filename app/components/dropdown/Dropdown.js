@@ -7,7 +7,6 @@ import { classNames } from '@/app/utils/classNames';
 const Dropdown = ({ options, initialSelection = '', placeholder, onSelect }) => {
    const [isOpen, setIsOpen] = useState(false);
    const [selectedOption, setSelectedOption] = useState(null);
-   console.log('bb ~ Dropdown.js:10 ~ Dropdown ~ selectedOption:', selectedOption);
 
    useEffect(() => {
       const initialOption = options.find(option => option.value === initialSelection);
@@ -15,14 +14,12 @@ const Dropdown = ({ options, initialSelection = '', placeholder, onSelect }) => 
          setSelectedOption(initialOption);
       }
    }, [initialSelection, options]);
-   console.log('bb ~ Dropdown.js:18 ~ Dropdown ~ options:', options);
 
    const handleToggle = () => {
       setIsOpen(!isOpen);
    };
 
    const handleSelect = option => {
-      console.log('bb ~ Dropdown.js:25 ~ Dropdown ~ option:', option);
       setSelectedOption(option);
       setIsOpen(false);
       onSelect(option);

@@ -13,7 +13,6 @@ export async function GET(request) {
             Authorization: `Bearer ${accessToken}` // Forward the Authorization header
          }
       });
-      console.log('bb ~ route.js:46 ~ GET ~ response.data:', response.data);
 
       return NextResponse.json(response.data); // todo: verify status code 200 is defaulted to here
    } catch (error) {

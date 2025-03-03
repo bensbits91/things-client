@@ -1,8 +1,6 @@
-// import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getThingsFromDb, addThingToDb } from '@/app/services/things';
+import { getThingsFromDb, addThingToDb, updateThingInDb } from '@/app/services/things';
 import { checkDetailExistsInDb, addDetailToDb } from '@/app/services/details';
-// import useSearchStore from '@/app/store/searchStore';
 import { useSearch } from '@/app/hooks/search';
 
 export const useThings = () => {
@@ -73,7 +71,6 @@ export const useAddThingWithDetails = (handleError, searchTerm) => {
    const addDetailMutation = useAddDetail();
    const addThingMutation = useAddThing();
 
-
    const {
       data: results,
       isLoading: isLoadingResults,
@@ -81,16 +78,14 @@ export const useAddThingWithDetails = (handleError, searchTerm) => {
       // refetch
    } = useSearch(searchTerm);
 
-   const addThingWithDetails = async (externalId /* , detailToAdd */) => {
+   const addThingWithDetails = async externalId => {
       try {
          let detail = await checkDetailExistsInDb(externalId);
 
          // If not found in db, add detail to db and get detail_id
          if (!detail) {
             // find detail we need from the results in cache
-            console.log('bb ~ things.js:92 ~ addThingWithDetails ~ results:', results);
             const detailToAdd = results.find(result => result.external_id === externalId);
-            console.log('bb ~ things.js:92 ~ addThingWithDetails ~ detailToAdd:', detailToAdd);
             if (!detailToAdd) {
                console.error('Detail data to add not found');
                throw new Error('Failed to find detail in cached results');
@@ -126,7 +121,21 @@ export const useAddThingWithDetails = (handleError, searchTerm) => {
    return { addThingWithDetails };
 };
 
-// todo: need to write a new hook "useUpdateThing" that sends a put with 
-// the updated thing in the body
-// and the thing _id in the params
-// and invalidates the 'things' cache
+export const useUpdateThing = (handleError) => {
+   const queryClient = useQueryClient();
+   const updateThingMutation = useMutation({
+      mutationFn: (newThing) => updateThingInDb(newThing),
+      onSuccess: () => {
+         console.log('bb ~ things.js:138 ~ Thing updated successfully');
+         queryClient.invalidateQueries(['things']);
+         console.log("bb ~ things.js:140 ~ react-query 'things' cache invalidated");
+      },
+      onError: error => {
+         console.log('bb ~ things.js:143 ~ useUpdateThing ~ error:', error);
+         handleError(error);
+         throw error;
+      }
+   });
+
+   return { updateThingMutation };
+};

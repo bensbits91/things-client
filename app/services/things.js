@@ -1,5 +1,20 @@
 import axiosInstance from '@/app/utils/axiosInstance';
 
+export const addThingToDb = async thingToAdd => {
+   if (!thingToAdd || !thingToAdd.name || !thingToAdd.detail_id) {
+      throw new Error('Missing required parameters in addThingToDb');
+   }
+   try {
+      const response = await axiosInstance.post('/api/things', thingToAdd);
+      return response.data;
+   } catch (error) {
+      const { status } = error.response || error;
+      if (status === 409)
+         throw new Error('Conflict error: Thing already exists in DB.', error, status);
+      else throw error;
+   }
+};
+
 export const getThingsFromDb = async () => {
    try {
       const res = await axiosInstance.get('/api/things');
@@ -47,21 +62,15 @@ export const getThingsFromDb = async () => {
    }
 };
 
-export const addThingToDb = async thingToAdd => {
-   if (!thingToAdd || !thingToAdd.name || !thingToAdd.detail_id) {
-      throw new Error('Missing required parameters in addThingToDb');
+export const updateThingInDb = async thingToUpdate => {
+   if (!thingToUpdate || !thingToUpdate._id || !thingToUpdate.name) {
+      throw new Error('Missing required parameters in updateThingInDb');
    }
    try {
-      const response = await axiosInstance.post('/api/things', thingToAdd);
+      const response = await axiosInstance.put('/api/things/', thingToUpdate);
       return response.data;
    } catch (error) {
-      const { status } = error.response || error;
-      if (status === 409)
-         throw new Error('Conflict error: Thing already exists in DB.', error, status);
-      else throw error;
+      console.error('Failed to update thing in services/things.js:', error);
+      throw error;
    }
 };
-
-// todo: need updateThingInDb
-// new thing is in the body
-// thing _id is a path paramm
