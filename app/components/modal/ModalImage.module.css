@@ -1,0 +1,11 @@
+.imageWrapper {
+   position: relative;
+   min-height: 300px;
+   width: 100%;
+   max-width: 250px;
+   min-width: 175px;
+
+   img {
+      object-fit: contain;
+   }
+}

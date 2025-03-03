@@ -1,42 +1,121 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+   --background: #ffffff;
+   --foreground: #171717;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+   :root {
+      --white: #fff;
+      --black: #000;
+      --gray: #050607;
+      --teal: #00d4b0;
+      --red: #ff7e9b;
+      --pink: #ff7edb;
+      --blue: #7edbff;
+      --yellow: #dbff7e;
+      --green: #7effa2;
+      --orange: #ffe37e;
+      --eggplant: #2a2139;
+
+      --background: color-mix(in oklab, var(--gray) 80%, white);
+      --foreground: color-mix(in oklab, var(--gray) 10%, white);
+
+      --link-color: var(--teal);
+      --link-hover-color: color-mix(in oklab, var(--teal) 60%, white);
+   }
 }
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+   max-width: 100vw;
+   overflow-x: hidden;
+}
+
+:has(.hasOverlay) {
+   overflow: hidden;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+   color: var(--foreground);
+   background: var(--background);
+   font-family: Arial, Helvetica, sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
 }
 
 * {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+   box-sizing: border-box;
+   padding: 0;
+   margin: 0;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+   color: inherit;
+   text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+   html {
+      color-scheme: dark;
+   }
+}
+
+/* animation */
+
+.willAppearFromRight {
+   transform: translateX(100vw);
+}
+@keyframes slideLeftShow {
+   from {
+      opacity: 0;
+   }
+   to {
+      transform: translateX(0);
+      opacity: 1;
+   }
+}
+@keyframes slideRightHide {
+   from {
+      transform: translateX(0);
+      opacity: 1;
+   }
+   to {
+      transform: translateX(100vw);
+      opacity: 0;
+   }
+}
+.slideLeftShow {
+   animation: slideLeftShow 150ms ease-out forwards;
+}
+.slideRightHide {
+   animation: slideRightHide 150ms ease-out forwards;
+}
+
+.willAppearFromBottom {
+   transform: translateY(100vh);
+}
+@keyframes slideUpShow {
+   from {
+      opacity: 0;
+   }
+   to {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+@keyframes slideDownHide {
+   from {
+      transform: translateY(0);
+      opacity: 1;
+   }
+   to {
+      transform: translateY(100vh);
+      opacity: 0;
+   }
+}
+.slideUpShow {
+   animation: slideUpShow 150ms ease-out forwards;
+}
+.slideDownHide {
+   animation: slideDownHide 150ms ease-out forwards;
 }

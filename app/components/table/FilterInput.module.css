@@ -1,0 +1,10 @@
+.filterInput {
+   margin-bottom: 0.75rem;
+   padding: 0.25rem;
+   width: 100%;
+   border-collapse: collapse;
+   border-width: 0 0 1px 0;
+   border-style: solid;
+   border-color: #ccc;
+   background-color: #222;
+}

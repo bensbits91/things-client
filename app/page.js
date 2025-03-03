@@ -1,5 +1,6 @@
 import { auth0 } from '@/lib/auth0';
 import styles from './page.module.css';
+import { Text } from '@/app/components/typography';
 
 export default async function Home() {
    const session = await auth0.getSession(); // todo: should this be moved up to layout.js?
@@ -18,7 +19,7 @@ export default async function Home() {
    return (
       <div className={styles.page}>
          <div>
-            <p>
+            <Text>
                Hey
                {picture && (
                   <img
@@ -30,7 +31,7 @@ export default async function Home() {
                   />
                )}
                {nickname || email}
-            </p>
+            </Text>
             <a href='/auth/logout'>Log out</a>
          </div>
       </div>

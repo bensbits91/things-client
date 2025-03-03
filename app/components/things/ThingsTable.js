@@ -1,28 +1,81 @@
 'use client';
-import { Table } from '../table';
+import { useState, Suspense } from 'react';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useThings } from '@/app/hooks/things';
+import { useErrorHandler } from '@/app/hooks/errors';
+import { ErrorBoundary } from '@/app/components/ErrorBoundary';
+import { Table } from '@/app/components/table';
+import { Modal } from '@/app/components/modal';
+import { Loading } from '@/app/components/loading';
+import { Toast } from '@/app/components/toast';
+import { Text } from '@/app/components/typography';
 
 const ThingsTable = () => {
    const { data: things, isLoading, isError } = useThings();
+   console.log('bb ~ ThingsTable.js:15 ~ ThingsTable ~ things:', things);
+   const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler(); // todo
+   const [modalData, setModalData] = useState(null);
+   const [toastMessage, setToastMessage] = useState(null);
 
-   if (isLoading) {
-      return <p>Loading...</p>;
-   }
+   const handleViewDetailsClick = clickedThing => {
+      setModalData(clickedThing);
+   };
 
-   if (isError) {
-      return <p>Error loading things.</p>;
-   }
+   const handleCloseModal = () => {
+      setModalData(null);
+   };
 
    const columns = [
-      { key: 'name', label: 'Name' }
-      //   { key: 'type', label: 'Type' }
+      {
+         key: 'main_image_url',
+         label: '',
+         columnType: 'image'
+         // onClick: handleViewDetailsClick
+      },
+      {
+         key: 'name',
+         label: 'Name',
+         truncateLength: 50
+         // onClick: handleViewDetailsClick
+      },
+      { key: 'type', label: 'Type', columnType: 'icon' },
+      { key: 'rating', label: 'Rating', columnType: 'rating' },
+      { key: 'statusText', label: 'Status' },
+      { key: 'country', label: 'Country' },
+      { key: 'language', label: 'Language' },
+      { key: 'date', label: 'Date' },
+      { key: 'genres', label: 'Genres' }
    ];
 
-   const actions = [
+   // const tableActions = [
+   //    {
+   //       key: 'view',
+   //       label: 'View',
+   //       onClick: handleViewDetailsClick
+   //    },
+   //    {
+   //       key: 'edit',
+   //       label: 'Edit',
+   //       onClick: row => console.log('Edit', row)
+   //    },
+   //    {
+   //       key: 'delete',
+   //       label: 'Delete',
+   //       onClick: row => console.log('Delete', row)
+   //    }
+   // ];
+
+   const modalActions = [
       {
-         key: 'view',
-         label: 'View',
-         onClick: row => console.log('would show in modal:', row)
+         key: 'hey',
+         label: 'Hey Ben',
+         onClick: () =>
+            setToastMessage({
+               heading: 'Hey Ben!',
+               message:
+                  "This'll be more info. This'll be more info. This'll be more info. This'll be more info. This'll be more info.",
+               variant: 'info'
+            })
       },
       {
          key: 'edit',
@@ -36,7 +89,50 @@ const ThingsTable = () => {
       }
    ];
 
-   return <Table data={things} columns={columns} actions={actions} />;
+   if (isLoading) {
+      return <Loading />;
+   }
+
+   if (isError) {
+      return <Text>Error loading things.</Text>;
+   }
+
+   const handleModalEdit = newThing => {
+      console.log('bb ~ ThingsTable.js:96 ~ handleModalEdit ~ newThing:', newThing);
+   };
+
+   return (
+      <QueryErrorResetBoundary>
+         {({ reset }) => (
+            <ErrorBoundary onReset={reset}>
+               <Suspense fallback={<Loading />}>
+                  <Table
+                     data={things}
+                     columns={columns}
+                     handleRowClick={handleViewDetailsClick}
+                     // actions={tableActions}
+                  />
+                  {modalData && (
+                     <Modal
+                        modalData={modalData}
+                        actions={modalActions}
+                        handleCloseModal={handleCloseModal}
+                        handleEdit={handleModalEdit}
+                     />
+                  )}
+                  {toastMessage && (
+                     <Toast
+                        heading={toastMessage.heading}
+                        message={toastMessage.message}
+                        variant={toastMessage.variant}
+                        onClose={() => setToastMessage(null)}
+                     />
+                  )}
+               </Suspense>
+            </ErrorBoundary>
+         )}
+      </QueryErrorResetBoundary>
+   );
 };
 
 export default ThingsTable;

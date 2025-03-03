@@ -1,0 +1,19 @@
+.ratingWrap {
+   display: flex;
+
+   .starWrap {
+      height: 1rem;
+      width: 1rem;
+      padding-right: 0.25rem;
+
+      &.starFill {
+         color: var(--link-color);
+      }
+   }
+
+   &.editable {
+      .starWrap {
+         cursor: pointer;
+      }
+   }
+}

@@ -1,0 +1,11 @@
+.table {
+   width: 100%;
+   border-collapse: collapse;
+   border-spacing: 0;
+   background-color: color-mix(in oklab, var(--gray) 80%, white);
+
+   thead {
+      height: 3rem;
+      text-align: left;
+   }
+}

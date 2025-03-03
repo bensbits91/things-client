@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { getSearch } from '@/app/services/search';
-import useSearchStore from '@/app/store/searchStore';
 
 // search is different from things and details because
 // the server handles creating (caching) the search results
@@ -8,13 +7,7 @@ import useSearchStore from '@/app/store/searchStore';
 // we don't need to invalidate the cache
 // todo: right ^^^ ???
 
-
-// might be wrong? searchTerm is stuck. Click add to list, and it sends the previous searchTerm...
-
-
-export const useSearch = () => {
-   const { searchTerm } = useSearchStore();
-
+export const useSearch = searchTerm => {
    const { data, isLoading, isError, refetch } = useQuery({
       queryKey: ['search', searchTerm],
       queryFn: () => getSearch(searchTerm),

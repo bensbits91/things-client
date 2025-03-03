@@ -61,3 +61,7 @@ export const addThingToDb = async thingToAdd => {
       else throw error;
    }
 };
+
+// todo: need updateThingInDb
+// new thing is in the body
+// thing _id is a path paramm

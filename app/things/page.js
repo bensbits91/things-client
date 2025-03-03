@@ -1,7 +1,8 @@
 import axiosInstance from '../utils/axiosInstance';
 import { auth0 } from '@/lib/auth0';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
-import { ThingsTable } from '../components/things';
+import { ThingsTable } from '@/app/components/things';
+import { Heading } from '@/app/components/typography';
 
 const getInitialData = async () => {
    try {
@@ -20,6 +21,13 @@ const getInitialData = async () => {
          'Failed to load things on page:',
          error.response ? error.response.data : error.message
       );
+      // if (
+      //    error.message === 'Authorization token expired' ||
+      //    error.response.status === 401
+      // ) {
+      //    // Redirect to the login page if the token is expired or invalid
+      //    auth0.loginWithRedirect();
+      // }
       return null;
    }
 };
@@ -36,9 +44,8 @@ const ThingsPage = async () => {
 
    return (
       <div>
-         <h1>My Things</h1>
+         <Heading level='1'>My Things</Heading>
          <div>
-            <p>Things will go here</p>
             <HydrationBoundary state={dehydratedState}>
                <ThingsTable />
             </HydrationBoundary>

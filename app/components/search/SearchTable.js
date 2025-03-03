@@ -1,21 +1,23 @@
 'use client';
 import { useMemo, useEffect, useState, Suspense } from 'react';
 import { useQueryClient, QueryErrorResetBoundary } from '@tanstack/react-query';
-import useSearchStore from '@/app/store/searchStore';
-import useModalStore from '@/app/store/modalStore';
 import { useErrorHandler } from '@/app/hooks/errors';
 import { useThings, useAddThingWithDetails } from '@/app/hooks/things';
 import { useSearch } from '@/app/hooks/search';
 import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { Table } from '@/app/components/table';
 import { Toast } from '@/app/components/toast';
+import { Loading } from '@/app/components/loading';
+import { Modal } from '@/app/components/modal';
+import { Text } from '@/app/components/typography';
 
-export const SearchTable = () => {
+// todo: use useTable hook
+
+export const SearchTable = ({ searchTerm }) => {
    const queryClient = useQueryClient();
-   const { searchTerm } = useSearchStore();
-   const { openModal } = useModalStore();
    const { handleError, error, resetError, showAlert, setShowAlert } = useErrorHandler();
-   const [toastMessage, setToastMessage] = useState('');
+   const [modalData, setModalData] = useState(null);
+   const [toastMessage, setToastMessage] = useState(null);
 
    const {
       data: things,
@@ -30,30 +32,64 @@ export const SearchTable = () => {
       isError: isErrorResults,
       error: resultsError,
       refetch
-   } = useSearch();
+   } = useSearch(searchTerm);
+
+   const reultsWithUserInfo = useMemo(() => {
+      // todo: Would it be better to do this with mongoose aggregate?
+      if (!results || !things) return [];
+      return results.map(result => {
+         const userThing = things.find(thing => {
+            const thingExternalId = thing.external_id;
+            if (!thingExternalId) return false;
+            const resultExternalId = result.external_id?.toString();
+            return thingExternalId === resultExternalId;
+         });
+
+         return {
+            ...result,
+            userHasThing: !!userThing,
+            rating: userThing?.rating || 0,
+            status: userThing?.status || 0,
+            notes: userThing?.notes || '',
+            review: userThing?.review || ''
+         };
+      });
+   }, [results, things]);
 
    // import handleError into the component, and pass it to the hook
    // so they share the same handler and don't conflict with each other (i think)
-   const { addThingWithDetails } = useAddThingWithDetails(handleError);
+   const { addThingWithDetails } = useAddThingWithDetails(handleError, searchTerm);
 
    const handleAddThingClick = async externalId => {
       try {
          await addThingWithDetails(externalId);
-         setToastMessage('Thing added successfully :)');
+         setToastMessage({ message: 'Thing added successfully :)', variant: 'success' });
       } catch (error) {
          console.log('bb ~ SearchTable.js:56 ~ SearchTable ~ error:', error);
+         setToastMessage({ message: 'Thing NOT added :(', variant: 'error' });
          const { status } = error.response || error;
          if (status === 409) {
+            setToastMessage({
+               message: 'You already have that thing :)',
+               variant: 'info'
+            });
             handleError(new Error('Conflict error: The thing already exists.'));
          } else {
+            setToastMessage({
+               message: 'Unknown error adding that thing :/',
+               variant: 'success'
+            });
             handleError(new Error('Unknown error adding that thing :/'));
          }
       }
    };
 
-   const handleViewDetailsClick = externalId => {
-      const currentModalData = results.find(result => result.external_id === externalId);
-      openModal(currentModalData);
+   const handleViewDetailsClick = row => {
+      console.log('bb ~ SearchTable.js:86 ~ SearchTable ~ row:', row);
+      const currentModalData = reultsWithUserInfo.find(
+         result => result.external_id === row.external_id
+      );
+      setModalData(currentModalData);
    };
 
    // check the cache, refetch if not found
@@ -71,35 +107,32 @@ export const SearchTable = () => {
       handleSearch();
    }, [searchTerm]);
 
-   const reultsWithIndicator = useMemo(() => {
-      if (!results || !things) return [];
-      return results.map(result => {
-         const userHasThing =
-            things &&
-            Array.isArray(things) &&
-            things.find(thing => {
-               const thingExternalId = thing.details[0]?.external_id;
-               if (!thingExternalId) return false;
-               const resultExternalId = result.external_id?.toString();
-               const hasit = thingExternalId === resultExternalId;
-               return hasit;
-            });
-
-         return { ...result, userHasThing: !!userHasThing };
-      });
-   }, [results, things]);
-
    const columns = [
-      { key: 'name', label: 'Name' },
-      { key: 'type', label: 'Type' }
+      {
+         key: 'main_image_url',
+         label: '',
+         columnType: 'image'
+         // onClick: handleViewDetailsClick
+      },
+      {
+         key: 'name',
+         label: 'Name',
+         truncateLength: 35
+         // onClick: handleViewDetailsClick
+      },
+      { key: 'type', label: 'Type', columnType: 'icon' },
+      { key: 'country', label: 'Country' },
+      { key: 'language', label: 'Language' },
+      { key: 'date', label: 'Date' },
+      { key: 'genres', label: 'Genres' }
    ];
 
-   const actions = [
-      {
-         key: 'view',
-         label: 'View Details',
-         onClick: row => handleViewDetailsClick(row.external_id)
-      },
+   const tableActions = [
+      // {
+      //    key: 'view',
+      //    label: 'View Details',
+      //    onClick: row => handleViewDetailsClick(row.external_id)
+      // },
       {
          key: 'add',
          label: 'Add to List',
@@ -108,23 +141,51 @@ export const SearchTable = () => {
       }
    ];
 
+   const handleModalAddClick = () => {
+      const { external_id } = modalData;
+      if (external_id) {
+         handleAddThingClick(external_id);
+      }
+   };
+
+   const modalActions = [
+      {
+         key: 'hey',
+         label: 'Hey Ben',
+         onClick: () =>
+            setToastMessage({
+               heading: 'Hey Ben!',
+               message:
+                  'All work and no play... All work and no play... All work and no play... All work and no play... All work and no play...',
+               variant: 'success'
+            })
+      },
+      {
+         key: 'add',
+         label: 'Add to List',
+         onClick: handleModalAddClick,
+         altText: 'In list'
+      }
+   ];
+
+   const handleCloseModal = () => {
+      setModalData(null);
+   };
+
    useEffect(() => {
       if (showAlert) {
-         setToastMessage(error.message);
+         setToastMessage({ message: error.message, variant: 'error' });
          setShowAlert(false);
       }
    }, [showAlert, error, setShowAlert]);
 
-   if (isLoadingResults) {
-      return <p>Loading...</p>;
+   if (isLoadingResults || isLoadingThings) {
+      // todo: do i need this if using Suspense??
+      return <Loading />;
    }
    if (isErrorResults) {
-      // or should we let fallback ui load?
-      return <p>Failed to load search results :(</p>;
-   }
-
-   if (isLoadingThings) {
-      return <p>Loading things...</p>;
+      console.log('bb ~ SearchTable.js:153 ~ SearchTable ~ resultsError:', resultsError);
+      return <Text>Failed to load search results :(</Text>;
    }
    if (isErrorThings) {
       console.log(
@@ -140,23 +201,39 @@ export const SearchTable = () => {
             thingsError?.message
          ].includes('Authorization token expired')
       ) {
-         router.push('/auth/login');
+         router.push('/auth/login'); // todo: Not working
       }
-      return <p>Failed to load things :(</p>;
+      return <Text>Failed to load things :(</Text>;
    }
 
    if (!results || results.length === 0) {
-      return <p>Search for something to get started...</p>;
+      return <Text>Search for something to get started...</Text>;
    }
 
    return (
       <QueryErrorResetBoundary>
          {({ reset }) => (
             <ErrorBoundary onReset={reset}>
-               <Suspense fallback={<p>Loading (todo)...</p>}>
-                  <Table data={reultsWithIndicator} columns={columns} actions={actions} />
+               <Suspense fallback={<Loading />}>
+                  <Table
+                     data={reultsWithUserInfo}
+                     columns={columns}
+                     handleRowClick={handleViewDetailsClick}
+                     actions={tableActions}
+                  />
+                  {modalData && (
+                     <Modal
+                        modalData={modalData}
+                        actions={modalActions}
+                        handleCloseModal={handleCloseModal}
+                     />
+                  )}
                   {toastMessage && (
-                     <Toast message={toastMessage} onClose={() => setToastMessage('')} />
+                     <Toast
+                        message={toastMessage.message}
+                        variant={toastMessage.variant}
+                        onClose={() => setToastMessage(null)}
+                     />
                   )}
                </Suspense>
             </ErrorBoundary>

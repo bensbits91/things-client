@@ -1,0 +1,35 @@
+.td {
+   padding-left: 0.5rem;
+   padding-right: 0.5rem;
+
+   .iconWrapper {
+      max-width: 2rem;
+   }
+
+   &.clickable {
+      cursor: pointer;
+      color: var(--link-color);
+      transition: all ease-in-out 300ms;
+
+      &:hover {
+         background-color: color-mix(in oklab, var(--gray) 60%, white);
+         color: var(--link-hover-color);
+
+         img {
+            transform: scale(1.05);
+         }
+      }
+   }
+
+   .imageWrapper {
+      position: relative;
+      min-height: 50px;
+      width: 100%;
+      max-width: 30px;
+      min-width: 50px;
+
+      img {
+         object-fit: contain;
+      }
+   }
+}

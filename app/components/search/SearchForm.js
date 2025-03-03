@@ -1,13 +1,13 @@
 'use client';
 import { useState } from 'react';
-import useSearchStore from '../../store/searchStore';
+import { SearchTable } from './SearchTable';
+import { Text } from '@/app/components/typography';
+import { Button } from '@/app/components/button';
 
 export default function SearchForm() {
    const [query, setQuery] = useState('');
-   const { setSearchTerm } = useSearchStore();
+   const [searchTerm, setSearchTerm] = useState('');
 
-   // our search form doesn't search, just sets the search term in the store
-   // the table handles searching and displaying the results
    const handleSubmit = e => {
       e.preventDefault();
       setSearchTerm(query);
@@ -25,16 +25,27 @@ export default function SearchForm() {
                onChange={e => setQuery(e.target.value)}
                placeholder='Enter search query'
             />
-            <button type='submit' style={{ marginLeft: 24 }}>
+            <Button type='submit' linkStyle>
                Search for details
-            </button>
-            <button
-               style={{ marginLeft: 24 }}
+            </Button>
+            <Button
                type='button'
+               linkStyle
                onClick={() => console.log('would add thing with just a name')}>
                Add without details
-            </button>
+            </Button>
          </form>
+         {!query && (
+            <div>
+               <Text>Start typing to get started</Text>
+            </div>
+         )}
+         {query && !searchTerm && (
+            <div>
+               <Text>Click the button to get started</Text>
+            </div>
+         )}
+         {searchTerm && <SearchTable searchTerm={searchTerm} />}
       </div>
    );
 }

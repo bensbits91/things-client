@@ -1,0 +1,28 @@
+.modal {
+   background-color: #333;
+   position: fixed;
+   top: 40px;
+   left: 40px;
+   right: 40px;
+   bottom: 40px;
+   padding: 40px;
+   overflow: auto;
+   border-radius: 0.5rem;
+   z-index: 1001;
+
+   .content {
+      margin-top: 1.25rem;
+
+      .hero {
+         width: 100%;
+         display: flex;
+         gap: 2.5rem;
+      }
+   }
+
+   .footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+   }
+}

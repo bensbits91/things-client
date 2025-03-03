@@ -1,12 +1,11 @@
-import { SearchForm, SearchTable, SearchModal } from '../components/search';
+import { SearchForm } from '@/app/components/search';
+import { Heading } from '@/app/components/typography';
 
 const SearchPage = () => {
    return (
       <div>
-         <h1>Search for a Thing</h1>
+         <Heading level='1'>Search for a Thing</Heading>
          <SearchForm />
-         <SearchTable />
-         <SearchModal />
       </div>
    );
 };

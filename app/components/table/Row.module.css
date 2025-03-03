@@ -1,0 +1,18 @@
+.row {
+   border-width: 1px 0 0 0;
+   border-style: solid;
+   border-color: #333;
+   height: 4.2rem;
+
+   &.clickable {
+      &:hover {
+         cursor: pointer;
+         border-color: var(--link-color);
+         border-width: 1px 0;
+      }
+   }
+
+   &:nth-child(2n) {
+      background-color: color-mix(in oklab, var(--gray) 70%, white);
+   }
+}
