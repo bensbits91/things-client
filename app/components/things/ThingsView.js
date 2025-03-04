@@ -6,6 +6,7 @@ import { useErrorHandler } from '@/app/hooks/errors';
 import { ErrorBoundary } from '@/app/components/ErrorBoundary';
 import { Table } from '@/app/components/table';
 import { Grid } from '@/app/components/grid';
+import { List } from '@/app/components/list';
 import { Wall } from '@/app/components/wall';
 import { Modal } from '@/app/components/modal';
 import { Loading } from '@/app/components/loading';
@@ -134,8 +135,12 @@ const ThingsView = () => {
                         // actions={tableActions}
                      />
                   )}
-                  {view === 'grid' && <Grid data={things} />}
-                  {view === 'list' && <div>not sure if we'll do a list view...</div>}
+                  {view === 'grid' && (
+                     <Grid data={things} handleItemClick={handleViewDetailsClick} />
+                  )}
+                  {view === 'list' && (
+                     <List data={things} handleItemClick={handleViewDetailsClick} />
+                  )}
                   {view === 'wall' && (
                      <Wall data={things} handleItemClick={handleViewDetailsClick} />
                   )}

@@ -32,8 +32,8 @@ const Dropdown = ({ options, initialSelection = '', placeholder, onSelect }) => 
             <button
                className={classNames(styles.dropdownToggle, isOpen && styles.active)}
                onClick={handleToggle}>
-               {selectedOption && selectedOption.value !== 0
-                  ? selectedOption.label
+               {selectedOption && selectedOption?.value !== 0
+                  ? selectedOption?.label
                   : placeholder}
                <div className={styles.dropdownIcon}>
                   <ChevronIcon />
@@ -42,7 +42,7 @@ const Dropdown = ({ options, initialSelection = '', placeholder, onSelect }) => 
             {isOpen && (
                <ul className={styles.dropdownMenu}>
                   {options.map(option => {
-                     const isSelected = selectedOption.value === option.value;
+                     const isSelected = selectedOption?.value === option.value;
                      return (
                         <li
                            key={option.value}

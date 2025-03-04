@@ -1,16 +1,16 @@
 import GridItem from './GridItem';
 import { Loading } from '@/app/components/loading';
+import styles from './Grid.module.css';
 
-const Grid = ({ data }) => {
+const Grid = ({ data, handleItemClick }) => {
    if (!data) {
       return <Loading />;
    }
 
    return (
-      <div>
-         <h1>Grid</h1>
+      <div className={styles.grid}>
          {data.map(item => (
-            <GridItem key={item._id} item={item} />
+            <GridItem key={item._id} item={item} onClick={handleItemClick} />
          ))}
       </div>
    );

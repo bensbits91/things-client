@@ -2,21 +2,21 @@ import Image from 'next/image';
 import { Rating } from '@/app/components/rating';
 import { TypeIcon, NoImageIcon } from '@/app/components/icons';
 import { Heading, TruncatedString } from '@/app/components/typography';
-import styles from './GridItem.module.css';
+import styles from './ListItem.module.css';
 import { classNames } from '@/app/utils/classNames';
 
-const GridItem = ({ item, onClick }) => {
+const ListItem = ({ item, onClick }) => {
    const {
       main_image_url,
       name,
       type,
       description,
-      rating
-      //   statusText,
-      //   country,
-      //   language,
-      //   date,
-      //   genres
+      rating,
+      statusText,
+      country,
+      language,
+      date,
+      genres
    } = item;
 
    const handleClick = () => {
@@ -42,11 +42,12 @@ const GridItem = ({ item, onClick }) => {
                   <TypeIcon type={type} />
                </div>
                <Heading level={3}>{name}</Heading>
-               {/* <div>{country}</div>
+               <div>{country}</div>
                <div>{language}</div>
                <div>{date}</div>
-               <div title='genres'>{genres?.join(', ')}</div> */}
+               <div title='genres'>{genres?.join(', ')}</div>
             </div>
+            <div>{statusText}</div>
             <Rating rating={rating} />
             <TruncatedString str={description} num={100} />
          </div>
@@ -54,4 +55,4 @@ const GridItem = ({ item, onClick }) => {
    );
 };
 
-export default GridItem;
+export default ListItem;
